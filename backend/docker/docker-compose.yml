@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  # Servicio de la Base de Datos PostgreSQL
+  db:
+    image: postgres:15-alpine
+    container_name: ciberdevs_posterior_db
+    restart: always
+    env_file:
+      - ../.env
+    environment:
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-supersecretpassword}
+      POSTGRES_DB: ${DB_NAME:-ciberdevs_db}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - ciberdevs_network
+
+  # Servicio del Backend (API)
+  api:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: ciberdevs_backend_api
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - "${PORT:-3000}:3000"
+    env_file:
+      - ../.env
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - DB_HOST=db # Apunta al nombre del servicio de la BD en Docker
+      - DB_PORT=5432
+      - DB_USER=${DB_USER:-postgres}
+      - DB_PASSWORD=${DB_PASSWORD:-supersecretpassword}
+      - DB_NAME=${DB_NAME:-ciberdevs_db}
+    networks:
+      - ciberdevs_network
+
+# Volumen persistente para evitar perder datos si se cae el contenedor de BD
+volumes:
+  postgres_data:
+
+# Red interna para comunicación segura entre contenedores
+networks:
+  ciberdevs_network:
+    driver: bridge
