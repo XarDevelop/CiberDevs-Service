@@ -113,3 +113,18 @@
             padding: 16px 40px;
             font-size: 1rem;
         }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            padding: 8px;
+        }
+
+        .menu-toggle span {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background: var(--color-black);
+            transition: var(--transition);
+        }
