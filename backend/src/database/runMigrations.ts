@@ -1,8 +1,12 @@
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import { pool } from './index.js';
 // Importamos dotenv para asegurarnos de que levante variables si lo corremos de forma independiente
 import 'dotenv/config'; 
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 async function runMigrations() {
     console.log('Iniciando proceso de migraciones...');
@@ -10,7 +14,7 @@ async function runMigrations() {
 
     try {
         // Obtenemos los archivos SQL de la carpeta 'migration'
-        const migrationDir = path.join(__dirname, '../../migration');
+        const migrationDir = path.join(__dirname, '../../../migration');
         const files = fs.readdirSync(migrationDir).sort(); // Los ordena alfanuméricamente (001_, 002_, etc.)
 
         // Iniciamos la transacción (buena práctica para las migraciones)

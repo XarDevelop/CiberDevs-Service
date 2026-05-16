@@ -32,9 +32,11 @@ RUN npm ci --only=production
 
 # Copiar el código compilado desde la etapa anterior
 COPY --from=builder /usr/src/app/dist ./dist
+# Copiar las migraciones
+COPY --from=builder /usr/src/app/migration ./migration
 
 # Exponer el puerto
 EXPOSE 3000
 
 # Comando de inicio
-CMD ["node", "dist/index.js"]
+CMD ["npm", "start"]
