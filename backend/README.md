@@ -81,7 +81,35 @@ Este documento detalla los endpoints disponibles actualmente en el backend, su p
 
 ---
 
-## 🛑 Estructura Global de Errores del Servidor
+## � Portafolio (Portfolio)
+
+### 1. Obtener todos los proyectos activos
+- **Endpoint:** `/portfolio`
+- **Método:** `GET`
+- **Descripción:** Devuelve una lista de todos los proyectos de portafolio que están marcados como activos, ordenados desde el más reciente.
+
+**Estructura de la respuesta (Éxito - 200 OK):**
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "title": "E-commerce Moda",
+      "description": "Tienda online con pasarela de pagos",
+      "icon": "🌐",
+      "image_url": null,
+      "project_url": "https://midominio.com",
+      "is_active": true,
+      "created_at": "2024-05-16T15:00:00.000Z"
+    }
+  ]
+}
+```
+
+---
+
+## �🛑 Estructura Global de Errores del Servidor
 Cualquier error inesperado en el lado del servidor o en base de datos será capturado y devolverá esta estructura genérica.
 
 **Estructura de la respuesta (Error Interno - 500 Internal Server Error):**

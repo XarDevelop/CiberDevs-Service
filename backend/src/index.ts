@@ -19,11 +19,13 @@ app.get('/', (req: Request, res: Response) => {
 // Registrar Error Handler SIEMPRE al final de todas las rutas y middlewares
 app.use(errorHandler);
 
-// Iniciar base de datos y luego levantar el servidor
-connectDB().then(() => {
 
+
+connectDB().then(() => {
     app.listen(PORT, () => {
         console.log(`Server is running on http://localhost:${PORT}`);
     });
 });
+
+export default app;
 
