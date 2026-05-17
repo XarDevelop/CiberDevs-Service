@@ -8,7 +8,7 @@ export default function Header() {
             <div class="header-inner">
                 <a href="#" class="logo">Ciber<span>Dev</span></a>
                 <nav class="nav-desktop">
-                    <a href="#problema" class="nav-link">El Problema</a>
+                    <a href="#problema" class="nav-link">Problema</a>
                     <a href="#solucion" class="nav-link">Servicios</a>
                     <a href="#portafolio" class="nav-link">Portafolio</a>
                     <a href="#testimonios" class="nav-link">Testimonios</a>

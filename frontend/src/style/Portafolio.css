@@ -74,3 +74,15 @@
             color: rgba(255,255,255,0.7);
             font-size: 0.875rem;
         }
+
+        .warning-portfolio{
+            display:grid;
+            justify-content:center;
+            background:var(--color-gray-200);
+            padding:20px;
+            border-radius:5px;
+        }
+
+        .p-warning{
+            text-align:center;
+        }

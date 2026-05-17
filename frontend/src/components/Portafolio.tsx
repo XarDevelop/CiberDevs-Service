@@ -1,77 +1,63 @@
 import React from 'react'
 import '../style/Portafolio.css'
+import axios from 'axios'
+import {useState,useEffect} from 'react'
+import PortafolioElement from './PortafolioElement'
+
+ interface PortafolioProps{
+    id: number,
+    title: string,
+    description: string,
+    icon: string,
+    image_url:string | null,
+    project_url: string,
+    is_active: boolean,
+    created_at:string
+}
+
+ interface RespuestaPortafolio{
+    success: boolean,
+    data: PortafolioProps[]
+}
 
 export default function Portafolio() {
+    const [listaProyectos,setListaProyectos]=useState<PortafolioProps[]>([]);
+    const [hayProyectos,setHayProyectos]=useState<boolean>(false);
+    useEffect(()=>{
+        const TraerProyectos=async ()=>{
+            try{
+            const response=await axios.get<RespuestaPortafolio>('/api/portfolio');
+            const data= response.data.data;
+            setHayProyectos(response.data.success)
+            setListaProyectos(data);
+            }catch(e){
+                alert(e)
+            }
+        }
+
+        TraerProyectos();
+    },[])
+
+    const MostrarPortafolios= listaProyectos.map((element:PortafolioProps)=>(<PortafolioElement key={element.id} props={element}></PortafolioElement>))
+
   return (
-    <div><section class="portfolio" id="portafolio">
-        <div class="container">
-            <div class="section-header">
-                <span class="section-label">Portafolio</span>
-                <h2 class="section-title">Muestra de proyectos</h2>
-                <p class="section-subtitle">Algunos de los proyectos que hemos desarrollado para nuestros clientes</p>
+    <div>
+        <section className="portfolio" id="portafolio">
+        <div className="container">
+            <div className="section-header">
+                <span className="section-label">Portafolio</span>
+                <h2 className="section-title">Muestra de proyectos</h2>
+                <p className="section-subtitle">Algunos de los proyectos que hemos desarrollado para nuestros clientes</p>
             </div>
-            <div class="portfolio-grid">
-                <div class="portfolio-item">
-                    <div class="portfolio-placeholder">
-                        <div class="portfolio-placeholder-icon">🌐</div>
-                        <div class="portfolio-placeholder-text">Proyecto 1</div>
-                    </div>
-                    <div class="portfolio-overlay">
-                        <h3>E-commerce Moda</h3>
-                        <p>Tienda online con pasarela de pagos</p>
-                    </div>
-                </div>
-                <div class="portfolio-item">
-                    <div class="portfolio-placeholder">
-                        <div class="portfolio-placeholder-icon">🏥</div>
-                        <div class="portfolio-placeholder-text">Proyecto 2</div>
-                    </div>
-                    <div class="portfolio-overlay">
-                        <h3>Clínica Dental</h3>
-                        <p>Sitio web + sistema de citas</p>
-                    </div>
-                </div>
-                <div class="portfolio-item">
-                    <div class="portfolio-placeholder">
-                        <div class="portfolio-placeholder-icon">🍔</div>
-                        <div class="portfolio-placeholder-text">Proyecto 3</div>
-                    </div>
-                    <div class="portfolio-overlay">
-                        <h3>Restaurante Local</h3>
-                        <p>Web + menú digital + pedidos</p>
-                    </div>
-                </div>
-                <div class="portfolio-item">
-                    <div class="portfolio-placeholder">
-                        <div class="portfolio-placeholder-icon">🏋️</div>
-                        <div class="portfolio-placeholder-text">Proyecto 4</div>
-                    </div>
-                    <div class="portfolio-overlay">
-                        <h3>Gimnasio FitLife</h3>
-                        <p>Plataforma completa de fitness</p>
-                    </div>
-                </div>
-                <div class="portfolio-item">
-                    <div class="portfolio-placeholder">
-                        <div class="portfolio-placeholder-icon">🏠</div>
-                        <div class="portfolio-placeholder-text">Proyecto 5</div>
-                    </div>
-                    <div class="portfolio-overlay">
-                        <h3>Inmobiliaria</h3>
-                        <p>Catálogo de propiedades + CRM</p>
-                    </div>
-                </div>
-                <div class="portfolio-item">
-                    <div class="portfolio-placeholder">
-                        <div class="portfolio-placeholder-icon">📚</div>
-                        <div class="portfolio-placeholder-text">Proyecto 6</div>
-                    </div>
-                    <div class="portfolio-overlay">
-                        <h3>Academia Online</h3>
-                        <p>Plataforma e-learning</p>
-                    </div>
-                </div>
+            {hayProyectos && (<div className="portfolio-grid">
+                {MostrarPortafolios}
+            </div>)}
+            {!hayProyectos && (<div className='warning-portfolio'>
+                <p className='p-warning'>
+                    No hay proyectos visibles
+                </p>
             </div>
+            )}
         </div>
     </section>
     </div>
