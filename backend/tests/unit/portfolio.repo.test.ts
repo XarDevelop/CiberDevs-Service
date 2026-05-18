@@ -1,6 +1,6 @@
 import { describe, it, expect, jest, afterEach } from '@jest/globals';
 import { pool } from '../../src/database/index.js';
-import { PortfolioRepository } from '../../src/repo/portfolio.repo.js';
+import { PortfolioRepository } from '../../src/portfolio/repo/portfolio.repo.js';
 
 describe('PortfolioRepository - Unit Tests', () => {
     const portfolioRepo = new PortfolioRepository();

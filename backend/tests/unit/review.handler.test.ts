@@ -1,7 +1,7 @@
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 import { type Request, type Response, type NextFunction } from 'express';
-import { ReviewHandler } from '../../src/handler/review.handler.js';
-import { type IReviewService } from '../../src/services/review.service.interface.js';
+import { ReviewHandler } from '../../src/review/handler/review.handler.js';
+import { type IReviewService } from '../../src/review/services/review.service.interface.js';
 import { type Review } from '../../src/models/review.model.js';
 
 describe('ReviewHandler - Unit Tests', () => {

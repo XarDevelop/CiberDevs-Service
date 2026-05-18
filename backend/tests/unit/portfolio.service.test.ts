@@ -1,6 +1,6 @@
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
-import { PortfolioService } from '../../src/services/portfolio.service.js';
-import { type IPortfolioRepository } from '../../src/repo/portfolio.repo.interface.js';
+import { PortfolioService } from '../../src/portfolio/services/portfolio.service.js';
+import { type IPortfolioRepository } from '../../src/portfolio/repo/portfolio.repo.interface.js';
 import { type PortfolioProject } from '../../src/models/portfolio.model.js';
 
 describe('PortfolioService - Unit Tests', () => {

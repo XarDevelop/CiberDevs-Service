@@ -1,5 +1,5 @@
-import { pool } from '../database/index.js';
-import { type PortfolioProject } from '../models/portfolio.model.js';
+import { pool } from '../../database/index.js';
+import { type PortfolioProject } from '../../models/portfolio.model.js';
 import { type IPortfolioRepository } from './portfolio.repo.interface.js';
 
 export class PortfolioRepository implements IPortfolioRepository {

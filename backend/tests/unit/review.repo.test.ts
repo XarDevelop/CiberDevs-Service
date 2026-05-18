@@ -1,6 +1,6 @@
 import { describe, it, expect, jest, afterEach } from '@jest/globals';
 import { pool } from '../../src/database/index.js';
-import { ReviewRepository } from '../../src/repo/review.repo.js';
+import { ReviewRepository } from '../../src/review/repo/review.repo.js';
 
 describe('ReviewRepository - Unit Tests', () => {
     const reviewRepo = new ReviewRepository();

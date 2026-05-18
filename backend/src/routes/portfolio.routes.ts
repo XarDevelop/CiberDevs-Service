@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { PortfolioRepository } from '../repo/portfolio.repo.js';
-import { PortfolioService } from '../services/portfolio.service.js';
-import { PortfolioHandler } from '../handler/portfolio.handler.js';
+import { PortfolioRepository } from '../portfolio/repo/portfolio.repo.js';
+import { PortfolioService } from '../portfolio/services/portfolio.service.js';
+import { PortfolioHandler } from '../portfolio/handler/portfolio.handler.js';
 
 const portfolioRouter = Router();
 

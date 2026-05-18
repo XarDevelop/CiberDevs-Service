@@ -1,4 +1,4 @@
-import { type PortfolioProject } from '../models/portfolio.model.js';
+import { type PortfolioProject } from '../../models/portfolio.model.js';
 import { type IPortfolioRepository } from '../repo/portfolio.repo.interface.js';
 import { type IPortfolioService } from './portfolio.service.interface.js';
 

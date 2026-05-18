@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import express, { type Request, type Response } from 'express';
+import cookieParser from 'cookie-parser';
 import { connectDB } from './database/index.js';
 import indexRoutes from './routes/index.js';
 import { errorHandler } from './middleware/errorHandler.js';
@@ -8,6 +9,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
+app.use(cookieParser());
 
 // Inyectar Rutas Principales
 app.use('/api', indexRoutes);

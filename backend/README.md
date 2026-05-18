@@ -81,7 +81,34 @@ Este documento detalla los endpoints disponibles actualmente en el backend, su p
 
 ---
 
-## � Portafolio (Portfolio)
+## 📌 Autenticación (Authentication)
+
+### 1. Iniciar sesión como administrador
+- **Endpoint:** `/admin/auth/login`
+- **Método:** `POST`
+- **Descripción:** Permite a un administrador iniciar sesión proporcionando la contraseña correcta. Devuelve un token JWT si las credenciales son válidas.
+- **Cuerpo esperado de la petición (JSON):**
+```json
+{
+  "password": "admin"
+}
+```
+- **Estructura de la respuesta (Éxito - 200 OK):**
+```json
+{
+  "message": "Login successful"
+}
+```
+- **Estructura de la respuesta (Error - 401 Unauthorized):**
+```json
+{
+  "error": "Invalid credentials"
+}
+```
+
+---
+
+## Portafolio (Portfolio)
 
 ### 1. Obtener todos los proyectos activos
 - **Endpoint:** `/portfolio`

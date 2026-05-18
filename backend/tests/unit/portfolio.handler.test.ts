@@ -1,7 +1,7 @@
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 import { type Request, type Response, type NextFunction } from 'express';
-import { PortfolioHandler } from '../../src/handler/portfolio.handler.js';
-import { type IPortfolioService } from '../../src/services/portfolio.service.interface.js';
+import { PortfolioHandler } from '../../src/portfolio/handler/portfolio.handler.js';
+import { type IPortfolioService } from '../../src/portfolio/services/portfolio.service.interface.js';
 import { type PortfolioProject } from '../../src/models/portfolio.model.js';
 
 describe('PortfolioHandler - Unit Tests', () => {

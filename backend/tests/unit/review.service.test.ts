@@ -1,6 +1,6 @@
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
-import { ReviewService } from '../../src/services/review.service.js';
-import { type IReviewRepository } from '../../src/repo/review.repo.interface.js';
+import { ReviewService } from '../../src/review/services/review.service.js';
+import { type IReviewRepository } from '../../src/review/repo/review.repo.interface.js';
 import { type Review } from '../../src/models/review.model.js';
 
 describe('ReviewService - Unit Tests', () => {

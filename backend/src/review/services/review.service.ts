@@ -1,7 +1,7 @@
 import { type IReviewService } from './review.service.interface.js';
 import { type IReviewRepository } from '../repo/review.repo.interface.js';
-import { type Review, type CreateReviewDTO } from '../models/review.model.js';
-import { AppError } from '../middleware/errorHandler.js';
+import { type Review, type CreateReviewDTO } from '../../models/review.model.js';
+import { AppError } from '../../middleware/errorHandler.js';
 
 export class ReviewService implements IReviewService {
     // Inyección de dependencias mediante la interface

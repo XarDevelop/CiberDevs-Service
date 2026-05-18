@@ -1,5 +1,5 @@
-import { pool } from '../database/index.js';
-import { type Review, type CreateReviewDTO } from '../models/review.model.js';
+import { pool } from '../../database/index.js';
+import { type Review, type CreateReviewDTO } from '../../models/review.model.js';
 import { type IReviewRepository } from './review.repo.interface.js';
 
 export class ReviewRepository implements IReviewRepository {
