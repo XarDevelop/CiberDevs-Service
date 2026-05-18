@@ -54,3 +54,37 @@ export const createReviewSchema = z.object({
                     .nullable()
     })
 });
+
+/**
+ * Esquema específico para validar la Creación de Proyectos en Portafolio.
+ */
+export const createPortfolioSchema = z.object({
+    body: z.object({
+        title: z.string({ message: 'El título es obligatorio' })
+                .min(3, 'El título debe tener al menos 3 caracteres')
+                .max(150, 'El título no debe superar los 150 caracteres'),
+        description: z.string({ message: 'La descripción es obligatoria' })
+                    .min(10, 'La descripción debe tener al menos 10 caracteres'),
+        icon: z.string().optional().nullable(),
+        image_url: z.string().url('Debe ser una URL válida').optional().nullable(),
+        project_url: z.string().url('Debe ser una URL válida').optional().nullable()
+    })
+});
+
+/**
+ * Esquema para validar la Actualización de Proyectos (todos los campos son opcionales).
+ */
+export const updatePortfolioSchema = z.object({
+    body: z.object({
+        title: z.string()
+                .min(3, 'El título debe tener al menos 3 caracteres')
+                .max(150, 'El título no debe superar los 150 caracteres')
+                .optional(),
+        description: z.string()
+                    .min(10, 'La descripción debe tener al menos 10 caracteres')
+                    .optional(),
+        icon: z.string().optional().nullable(),
+        image_url: z.string().url('Debe ser una URL válida').optional().nullable(),
+        project_url: z.string().url('Debe ser una URL válida').optional().nullable()
+    })
+});

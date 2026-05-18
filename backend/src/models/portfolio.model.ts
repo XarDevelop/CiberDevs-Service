@@ -8,3 +8,6 @@ export interface PortfolioProject {
     is_active: boolean;
     created_at: Date;
 }
+
+export type CreatePortfolioDTO = Omit<PortfolioProject, 'id' | 'created_at' | 'is_active'>;
+export type UpdatePortfolioDTO = Partial<CreatePortfolioDTO>;
