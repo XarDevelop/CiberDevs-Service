@@ -31,7 +31,7 @@ export default function Portafolio() {
             setHayProyectos(response.data.success)
             setListaProyectos(data);
             }catch(e){
-                alert(e)
+                console.log(e)
             }
         }
 

@@ -69,3 +69,19 @@
             font-size: 0.8125rem;
             color: var(--color-gray-500);
         }
+
+    .warning-testimonio{
+        display:grid;
+        justify-content:center;
+        background:var(--color-gray-200);
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+
+    .select-star{
+        width: 30px;
+    }
+
+    .p-warning{
+        padding: 10px 0;
+    }
