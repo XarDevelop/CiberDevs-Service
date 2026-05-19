@@ -262,6 +262,173 @@ Este documento detalla los endpoints disponibles actualmente en el backend, su p
 
 ---
 
+## 📌 Pedidos (Orders)
+
+### 1. Crear un nuevo pedido (público)
+- **Endpoint:** `/orders`
+- **Método:** `POST`
+- **Descripción:** Crea un nuevo pedido desde la landing page. No requiere autenticación. El estado por defecto es `en espera` y la etapa por defecto es `pendiente`.
+- **Rate limit:** 30 requests cada 15 minutos.
+- **Auth:** No requiere
+- **Cuerpo esperado de la petición (JSON):**
+```json
+{
+  "identifier": "Empresa Ejemplo SRL",
+  "contact": "empresa@mail.com",
+  "description": "Quiero una pagina web corporativa con secciones de inicio, servicios, contacto y blog."
+}
+```
+
+**Estructura de la respuesta (Éxito - 201 Created):**
+```json
+{
+  "success": true,
+  "data": {
+    "id": 1,
+    "identifier": "Empresa Ejemplo SRL",
+    "contact": "empresa@mail.com",
+    "description": "Quiero una pagina web corporativa con secciones de inicio, servicios, contacto y blog.",
+    "status": "en espera",
+    "stage": "pendiente",
+    "is_deleted": false,
+    "created_at": "2026-05-19T12:00:00.000Z"
+  }
+}
+```
+
+**Estructura de la respuesta (Error de validación - 400 Bad Request):**
+```json
+{
+  "success": false,
+  "message": "Datos de entrada inválidos",
+  "errors": [
+    {
+      "path": "body.identifier",
+      "message": "El identificador debe tener al menos 3 caracteres"
+    }
+  ]
+}
+```
+
+### 2. Obtener todos los pedidos activos
+- **Endpoint:** `/orders`
+- **Método:** `GET`
+- **Descripción:** Devuelve una lista de todos los pedidos no eliminados, ordenados por fecha de creación descendente.
+- **Rate limit:** 100 requests cada 15 minutos.
+- **Auth:** Requiere token JWT (cookie o `Authorization: Bearer`)
+
+**Estructura de la respuesta (Éxito - 200 OK):**
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "identifier": "Empresa Ejemplo SRL",
+      "contact": "empresa@mail.com",
+      "description": "Quiero una pagina web corporativa",
+      "status": "en espera",
+      "stage": "pendiente",
+      "is_deleted": false,
+      "created_at": "2026-05-19T12:00:00.000Z"
+    }
+  ]
+}
+```
+
+### 3. Obtener un pedido por ID
+- **Endpoint:** `/orders/:id`
+- **Método:** `GET`
+- **Descripción:** Devuelve un pedido específico por su ID (solo si no está eliminado).
+- **Rate limit:** 100 requests cada 15 minutos.
+- **Auth:** Requiere token JWT (cookie o `Authorization: Bearer`)
+
+**Estructura de la respuesta (Éxito - 200 OK):**
+```json
+{
+  "success": true,
+  "data": {
+    "id": 1,
+    "identifier": "Empresa Ejemplo SRL",
+    "contact": "empresa@mail.com",
+    "description": "Quiero una pagina web corporativa",
+    "status": "en espera",
+    "stage": "pendiente",
+    "is_deleted": false,
+    "created_at": "2026-05-19T12:00:00.000Z"
+  }
+}
+```
+
+**Estructura de la respuesta (No encontrado - 404 Not Found):**
+```json
+{
+  "success": false,
+  "message": "Pedido no encontrado"
+}
+```
+
+### 4. Actualizar un pedido
+- **Endpoint:** `/orders/:id`
+- **Método:** `PUT`
+- **Descripción:** Actualiza los campos enviados de un pedido existente. Útil para cambiar el `status` (`en espera`, `aceptado`, `rechazado`) y la `stage` (`pendiente`, `en desarrollo`, `en produccion`).
+- **Rate limit:** 30 requests cada 15 minutos.
+- **Auth:** Requiere token JWT (cookie o `Authorization: Bearer`)
+- **Cuerpo esperado de la petición (JSON) — todos los campos son opcionales:**
+```json
+{
+  "status": "aceptado",
+  "stage": "en desarrollo",
+  "identifier": "Empresa Ejemplo SRL",
+  "contact": "nuevo@mail.com",
+  "description": "Nueva descripcion del proyecto"
+}
+```
+
+**Estructura de la respuesta (Éxito - 200 OK):**
+```json
+{
+  "success": true,
+  "data": {
+    "id": 1,
+    "identifier": "Empresa Ejemplo SRL",
+    "contact": "nuevo@mail.com",
+    "description": "Nueva descripcion del proyecto",
+    "status": "aceptado",
+    "stage": "en desarrollo",
+    "is_deleted": false,
+    "created_at": "2026-05-19T12:00:00.000Z"
+  }
+}
+```
+
+### 5. Eliminar un pedido (soft delete)
+- **Endpoint:** `/orders/:id`
+- **Método:** `DELETE`
+- **Descripción:** Marca el pedido como eliminado (`is_deleted = true`). El pedido deja de aparecer en los listados.
+- **Rate limit:** 30 requests cada 15 minutos.
+- **Auth:** Requiere token JWT (cookie o `Authorization: Bearer`)
+- **Cuerpo:** No requiere
+
+**Estructura de la respuesta (Éxito - 200 OK):**
+```json
+{
+  "success": true,
+  "data": {
+    "id": 1,
+    "identifier": "Empresa Ejemplo SRL",
+    "contact": "empresa@mail.com",
+    "description": "Quiero una pagina web corporativa",
+    "status": "en espera",
+    "stage": "pendiente",
+    "is_deleted": true,
+    "created_at": "2026-05-19T12:00:00.000Z"
+  }
+}
+```
+
+---
+
 ## 🛑 Errores Globales
 
 ### Error de validación (Zod) — 400 Bad Request
@@ -310,8 +477,8 @@ La API implementa rate limiting por IP para prevenir abusos:
 | Limiter | Límite | Ventana | Endpoints |
 |---------|--------|---------|-----------|
 | `authLimiter` | 5 requests | 15 min | `POST /admin/auth/login` |
-| `writeLimiter` | 30 requests | 15 min | `POST/PUT/PATCH` en portfolio y reviews |
-| `generalLimiter` | 100 requests | 15 min | `GET` en portfolio y reviews |
+| `writeLimiter` | 30 requests | 15 min | `POST/PUT/PATCH/DELETE` en portfolio, reviews y orders |
+| `generalLimiter` | 100 requests | 15 min | `GET` en portfolio, reviews y orders |
 
 Las cabeceras `RateLimit-Remaining`, `RateLimit-Reset` y `RateLimit-Limit` se incluyen en cada respuesta.
 

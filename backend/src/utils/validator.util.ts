@@ -88,3 +88,44 @@ export const updatePortfolioSchema = z.object({
         project_url: z.string().url('Debe ser una URL válida').optional().nullable()
     })
 });
+
+/**
+ * Esquema para validar la Creación de Pedidos.
+ */
+export const createOrderSchema = z.object({
+    body: z.object({
+        identifier: z.string({ message: 'El identificador es obligatorio' })
+                    .min(3, 'El identificador debe tener al menos 3 caracteres')
+                    .max(255, 'El identificador no debe superar los 255 caracteres'),
+        contact: z.string({ message: 'El contacto es obligatorio' })
+                .min(5, 'El contacto debe tener al menos 5 caracteres')
+                .max(255, 'El contacto no debe superar los 255 caracteres'),
+        description: z.string({ message: 'La descripción es obligatoria' })
+                    .min(10, 'La descripción debe tener al menos 10 caracteres')
+    })
+});
+
+/**
+ * Esquema para validar la Actualización de Pedidos (todos los campos son opcionales).
+ */
+export const updateOrderSchema = z.object({
+    body: z.object({
+        identifier: z.string()
+                    .min(3, 'El identificador debe tener al menos 3 caracteres')
+                    .max(255, 'El identificador no debe superar los 255 caracteres')
+                    .optional(),
+        contact: z.string()
+                .min(5, 'El contacto debe tener al menos 5 caracteres')
+                .max(255, 'El contacto no debe superar los 255 caracteres')
+                .optional(),
+        description: z.string()
+                    .min(10, 'La descripción debe tener al menos 10 caracteres')
+                    .optional(),
+        status: z.enum(['en espera', 'aceptado', 'rechazado'], {
+            message: 'El estado debe ser: en espera, aceptado o rechazado'
+        }).optional(),
+        stage: z.enum(['pendiente', 'en desarrollo', 'en produccion'], {
+            message: 'La etapa debe ser: pendiente, en desarrollo o en produccion'
+        }).optional()
+    })
+});
