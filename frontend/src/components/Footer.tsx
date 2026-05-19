@@ -4,7 +4,7 @@ import '../style/Footer.css'
 export default function Footer() {
   return (
     <div>
-        <footer class="footer">
+        <footer class="footer" id='footer'>
         <div class="container">
             <div class="footer-grid">
                 <div class="footer-brand">

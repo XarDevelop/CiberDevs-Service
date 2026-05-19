@@ -26,10 +26,22 @@ interface RespuestaTestimonio{
   data:InfoTestimonio[];
 }
 
+interface Testimonio{
+  name:string,
+  content:string,
+  role:string,
+  starts:number
+}
+
 export default function Testimonio() {
     const [hayTestimonios,setHayTestimonios]=useState<boolean>(false);
     const [mostrarForm,setMostrarForm]=useState<boolean>(false)
     const [listaTestimonios,setListaTestimonios]=useState<InfoTestimonio[]>([]);
+
+    const [nombre,setNombre]=useState<string>('');
+    const [comentario,setComentario]=useState<string>('');
+    const [rol,setRol]=useState<string>('');
+    const [cantidadEstrellas,setCantidadEstrellas]=useState<number>(1);
 
     useEffect(()=>{
         const TraerTestimonios=async ()=>{
@@ -45,6 +57,19 @@ export default function Testimonio() {
         }
         TraerTestimonios();
     },[])
+
+    const EnviarTestimonio= async()=>{
+      const newTestimonio:Testimonio={
+        name:nombre,
+        content:comentario,
+        role:rol,
+        stars:cantidadEstrellas
+      }
+
+      const response=await axios.post('/api/reviews',newTestimonio);
+      const data=response.data.message;
+      console.log(data)
+    }
 
     const MostrarTestimonios=listaTestimonios.map((testimonio:InfoTestimonio)=>(<TestimonioGrid key={testimonio.id} props={testimonio}></TestimonioGrid>))
 
@@ -72,6 +97,7 @@ export default function Testimonio() {
       autoComplete="off"
     >
       <TextField
+      onChange={(e)=>{setNombre(e.target.value)}}
         id="outlined-suffix-shrink"
         label="Nombre y Apellidos"
         variant="outlined"
@@ -95,6 +121,9 @@ export default function Testimonio() {
       />
 
       <TextField
+      onChange={(e)=>{
+        setComentario(e.target.value)
+      }}
         id="outlined-suffix-shrink"
         label="Comentario"
         variant="outlined"
@@ -118,6 +147,9 @@ export default function Testimonio() {
       />
       
       <TextField
+      onChange={(e)=>{
+        setRol(e.target.value);
+      }}
         id="outlined-suffix-shrink"
         label="Rol o Trabajo que pertenece"
         variant="outlined"
@@ -141,8 +173,9 @@ export default function Testimonio() {
       />
       <br />
       
-      <label htmlFor="">Cantidad de estrellas a otorgar:</label><div>
-        <select className='select-star'>
+      <div>
+        <label htmlFor="">Cantidad de estrellas a otorgar:</label><div>
+        <select className='select-star' onChange={(e)=>{setCantidadEstrellas(e.target.value)}}>
         <option value="1">1</option>
         <option value="2">2</option>
         <option value="3">3</option>
@@ -150,12 +183,13 @@ export default function Testimonio() {
         <option value="5">5</option>
       </select>
       </div>
+      </div>
     </Box>
 
     <Box sx={{ '& button': { m: 1 } }}>
       <div>
-        <Button variant="outlined" size="medium">
-          Medium
+        <Button variant="outlined" size="medium" onClick={EnviarTestimonio}>
+          Enviar Testimonio
         </Button>
         
       </div>

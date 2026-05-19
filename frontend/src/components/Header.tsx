@@ -16,11 +16,6 @@ export default function Header() {
                     <a href="#contacto" class="nav-link">Contacto</a>
                     <button class="btn btn-primary">Solicitar Presupuesto</button>
                 </nav>
-                <button class="menu-toggle" aria-label="Menu">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
             </div>
         </div>
     </header>
