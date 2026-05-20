@@ -42,7 +42,7 @@ export default function Testimonio() {
     const [comentario,setComentario]=useState<string>('');
     const [rol,setRol]=useState<string>('');
     const [cantidadEstrellas,setCantidadEstrellas]=useState<number>(1);
-
+    const [estan_rellenas,setEstan_rellenas]=useState<boolean | null>(null);
     useEffect(()=>{
         const TraerTestimonios=async ()=>{
             try {
@@ -58,17 +58,36 @@ export default function Testimonio() {
         TraerTestimonios();
     },[])
 
-    const EnviarTestimonio= async()=>{
-      const newTestimonio:Testimonio={
+    const validarCampos=()=>{
+      if(nombre.trim()!='' || comentario.trim()!='' || rol.trim()!=''){
+        setEstan_rellenas(true);
+      }else{
+        setEstan_rellenas(false);
+      }
+    }
+
+    const EnviarTestimonio= async(e)=>{
+      validarCampos();
+      if(!estan_rellenas){
+        e.preventDefault();
+      }
+      else{
+        const newTestimonio:Testimonio={
         name:nombre,
         content:comentario,
         role:rol,
         stars:cantidadEstrellas
       }
 
-      const response=await axios.post('/api/reviews',newTestimonio);
-      const data=response.data.message;
-      console.log(data)
+      try {
+        const response=await axios.post('/api/reviews',newTestimonio);
+        const data=response.data.message;
+        console.log(data)
+      } catch (error) {
+        console.log(error)
+      }
+      
+      }
     }
 
     const MostrarTestimonios=listaTestimonios.map((testimonio:InfoTestimonio)=>(<TestimonioGrid key={testimonio.id} props={testimonio}></TestimonioGrid>))
@@ -87,7 +106,7 @@ export default function Testimonio() {
             </div>}
             {!hayTestimonios && <div className='warning-testimonio'><p className='p-warning'>No hay testimonios</p></div>}
         </div>
-        <button className="btn btn-outline" onClick={()=>{setMostrarForm(!mostrarForm)}}>{!mostrarForm && <p>Agregar Testimonio</p>}{mostrarForm && <p>Cancelar Testimonio</p>}</button>
+        <button className="btn btn-outline" onClick={()=>{setMostrarForm(!mostrarForm);setNombre('');setComentario('');setRol('');setCantidadEstrellas(1)}}>{!mostrarForm && <p>Agregar Testimonio</p>}{mostrarForm && <p>Cancelar Testimonio</p>}</button>
         {mostrarForm && <div>
 
         <Box
@@ -188,6 +207,7 @@ export default function Testimonio() {
 
     <Box sx={{ '& button': { m: 1 } }}>
       <div>
+        {estan_rellenas==false?<p className='alert-form'>Por favor rellene correctamente el formulario</p>: <div></div>}
         <Button variant="outlined" size="medium" onClick={EnviarTestimonio}>
           Enviar Testimonio
         </Button>

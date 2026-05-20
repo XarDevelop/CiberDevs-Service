@@ -1,7 +1,13 @@
 import React from 'react'
 import '../style/Servicios.css'
+import {useState} from 'react'
+import FormularioDeServicio from './FormularioDeServicio';
 
 export default function Servicios() {
+    const[Basico,setBasico]=useState<boolean>(false);
+    const[Pro,setPro]=useState<boolean>(false);
+    const[Premium,setPremium]=useState<boolean>(false);
+
   return (
     <div>
         <section className="solution" id="solucion">
@@ -26,10 +32,12 @@ export default function Servicios() {
                         <li className="feature-item">Hosting y dominio (1 año)</li>
                         <li className="feature-item">Soporte técnico 30 días</li>
                     </ul>
-                    <button className="btn btn-outline">Seleccionar Plan</button>
+                    <button className="btn btn-outline" onClick={()=>{setBasico(!Basico);setPro(false);setPremium(false)}}>Seleccionar Plan</button>
+                    {Basico && <FormularioDeServicio tipo={'Basico'}></FormularioDeServicio>}
                 </div>
 
-                <div className="pricing-card featured">
+                <div>
+                    <div className="pricing-card featured">
                     <span className="pricing-badge">Recomendado</span>
                     <h3 className="pricing-name">Digital Pro</h3>
                     <div className="pricing-price">$500<span>USD</span></div>
@@ -43,13 +51,16 @@ export default function Servicios() {
                         <li className="feature-item">Reportes de analytics</li>
                         <li className="feature-item">Soporte técnico 60 días</li>
                     </ul>
-                    <button className="btn btn-white">Seleccionar Plan</button>
+                    <button className="btn btn-white" onClick={()=>{setBasico(false);setPro(!Pro);setPremium(false)}}>Seleccionar Plan</button>
                 </div>
+                {Pro && <FormularioDeServicio tipo={'Pro'}></FormularioDeServicio>}
+                </div>
+
 
                 <div className="pricing-card">
                     <span className="pricing-badge">Premium</span>
                     <h3 className="pricing-name">Partner Growth</h3>
-                    <div className="pricing-price">$1,700<span>USD</span></div>
+                    <div className="pricing-price">$1,300<span>USD</span></div>
                     <p className="pricing-description">Alianza estratégica con inversión compartida en tu crecimiento.</p>
                     <ul className="features-list">
                         <li className="feature-item">Todo lo del plan Digital Pro</li>
@@ -62,7 +73,8 @@ export default function Servicios() {
                     <p className='p-span'>
                         <strong>Nota:</strong> El cliente paga un 5% de sus ganancias mensuales como royalty por la inversión compartida.
                     </p>
-                    <button className="btn btn-outline">Seleccionar Plan</button>
+                    <button className="btn btn-outline" onClick={()=>{setBasico(false);setPro(false);setPremium(!Premium)}}>Seleccionar Plan</button>
+                    {Premium && <FormularioDeServicio tipo={'Premium'}></FormularioDeServicio>}
                 </div>
             </div>
         </div>
