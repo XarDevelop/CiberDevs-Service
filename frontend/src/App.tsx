@@ -1,6 +1,8 @@
 import './App.css'
 import {Routes,Route} from 'react-router-dom'
 import PaginaPrincipal from './pages/PaginaPrincipal'
+import Login from './pages/LoginPanelDeAdministracion'
+import PanelAdministracion from './pages/PanelAdministracion'
 function App() {
 
   /**
@@ -30,6 +32,8 @@ export function useAppContext(): AppContextType {
     <div>
       <Routes>
    *    <Route path="/" element={<PaginaPrincipal></PaginaPrincipal>}></Route>
+   *    <Route path="/LoginPanelAdministracion2026" element={<Login></Login>}></Route>
+   *    <Route path="/LoginPanelPrincipal" element={<PanelAdministracion></PanelAdministracion>}></Route>
    * </Routes>
     </div>
   )
