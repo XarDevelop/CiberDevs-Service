@@ -24,8 +24,8 @@ import axios from 'axios';
 // Configuración de axios para enviar cookies automáticamente
 axios.defaults.withCredentials = true;
 
-const API_URL = '/admin/auth/login';
-const REDIRECT_URL = '/api/LoginPanelPrincipal';
+const API_URL = '/api/admin/auth/login';
+const REDIRECT_URL = '/LoginPanelPrincipal';
 
 const Login = () => {
   const [password, setPassword] = useState('');

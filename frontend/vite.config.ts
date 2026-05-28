@@ -33,6 +33,6 @@ export default defineConfig({
   // === CONFIGURACIÓN DEL BUILD (producción) ===
   build: {
     outDir: 'dist',                // Carpeta de salida
-    sourcemap: true,               // Mapas de código para debug
+    sourcemap: process.env.NODE_ENV !== 'production', // Solo sourcemaps en desarrollo
   },
 });

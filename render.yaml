@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: ciberdevs-api
+    env: node
+    region: ohio
+    plan: free
+    buildCommand: cd frontend && npm install && npm run build && cd ../backend && npm install && npm run build
+    startCommand: node backend/dist/src/index.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: JWT_EXPIRES_IN
+        value: 1h
+      - key: ADMIN_PASSWORD_HASH
+        sync: false
+      - key: CORS_ORIGIN
+        sync: false
