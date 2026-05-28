@@ -31,4 +31,17 @@ export class AuthHandler {
             res.status(500).json({ error: error.message });
         }
     };
+
+    logout = async (_req: Request, res: Response): Promise<void> => {
+        res.clearCookie('token', {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+        });
+        res.status(200).json({ message: 'Logout successful' });
+    };
+
+    checkSession = async (_req: Request, res: Response): Promise<void> => {
+        res.status(200).json({ success: true, message: 'Session is valid' });
+    };
 }

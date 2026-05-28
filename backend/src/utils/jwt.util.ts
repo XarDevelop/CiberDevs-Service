@@ -1,12 +1,10 @@
 import jwt from 'jsonwebtoken';
-
-const JWT_SECRET = process.env.JWT_SECRET || 'secret-fallback-key';
-const JWT_EXPIRES_IN = '1h';
+import { config } from '../config/index.js';
 
 export const generateToken = (payload: object): string => {
-    return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+    return jwt.sign(payload, config.jwt.secret, { expiresIn: config.jwt.expiresIn } as jwt.SignOptions);
 };
 
 export const verifyToken = (token: string): jwt.JwtPayload | string => {
-    return jwt.verify(token, JWT_SECRET);
+    return jwt.verify(token, config.jwt.secret);
 };

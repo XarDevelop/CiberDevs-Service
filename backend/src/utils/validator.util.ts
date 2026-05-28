@@ -37,21 +37,17 @@ export const validateSchema = (schema: z.ZodSchema) => {
  */
 export const createReviewSchema = z.object({
     body: z.object({
-        author_name: z.string({ message: 'El nombre es obligatorio' })
+        name: z.string({ message: 'El nombre es obligatorio' })
                         .min(3, 'El nombre debe tener al menos 3 caracteres')
                         .max(100, 'El nombre no debe superar los 100 caracteres'),
-        author_role: z.string({ message: 'El rol es obligatorio' })
+        role: z.string({ message: 'El rol es obligatorio' })
                         .min(2, 'El rol debe tener al menos 2 caracteres')
                         .max(150, 'El rol no debe superar los 150 caracteres'),
         content: z.string({ message: 'El contenido es obligatorio' })
                     .min(10, 'El testimonio debe ser más descriptivo (mínimo 10 caracteres)'),
-        rating: z.number({ message: 'La calificación es obligatoria' })
+        stars: z.number({ message: 'La calificación es obligatoria' })
                     .min(1, 'La calificación mínima es 1')
                     .max(5, 'La calificación máxima es 5'),
-        avatar_url: z.string()
-                    .url('Debe ser una URL válida')
-                    .optional()
-                    .nullable()
     })
 });
 
@@ -94,14 +90,16 @@ export const updatePortfolioSchema = z.object({
  */
 export const createOrderSchema = z.object({
     body: z.object({
-        identifier: z.string({ message: 'El identificador es obligatorio' })
-                    .min(3, 'El identificador debe tener al menos 3 caracteres')
-                    .max(255, 'El identificador no debe superar los 255 caracteres'),
-        contact: z.string({ message: 'El contacto es obligatorio' })
-                .min(5, 'El contacto debe tener al menos 5 caracteres')
-                .max(255, 'El contacto no debe superar los 255 caracteres'),
-        description: z.string({ message: 'La descripción es obligatoria' })
-                    .min(10, 'La descripción debe tener al menos 10 caracteres')
+        name: z.string({ message: 'El nombre es obligatorio' })
+                    .min(3, 'El nombre debe tener al menos 3 caracteres')
+                    .max(255, 'El nombre no debe superar los 255 caracteres'),
+        telefono: z.string({ message: 'El teléfono es obligatorio' })
+                .min(5, 'El teléfono debe tener al menos 5 caracteres')
+                .max(255, 'El teléfono no debe superar los 255 caracteres'),
+        coment: z.string({ message: 'El comentario es obligatorio' })
+                    .min(10, 'El comentario debe tener al menos 10 caracteres'),
+        tipo_pedido: z.string({ message: 'El tipo de pedido es obligatorio' }),
+        tipo_pago: z.string({ message: 'El tipo de pago es obligatorio' }),
     })
 });
 
@@ -110,17 +108,19 @@ export const createOrderSchema = z.object({
  */
 export const updateOrderSchema = z.object({
     body: z.object({
-        identifier: z.string()
-                    .min(3, 'El identificador debe tener al menos 3 caracteres')
-                    .max(255, 'El identificador no debe superar los 255 caracteres')
+        name: z.string()
+                    .min(3, 'El nombre debe tener al menos 3 caracteres')
+                    .max(255, 'El nombre no debe superar los 255 caracteres')
                     .optional(),
-        contact: z.string()
-                .min(5, 'El contacto debe tener al menos 5 caracteres')
-                .max(255, 'El contacto no debe superar los 255 caracteres')
+        telefono: z.string()
+                .min(5, 'El teléfono debe tener al menos 5 caracteres')
+                .max(255, 'El teléfono no debe superar los 255 caracteres')
                 .optional(),
-        description: z.string()
-                    .min(10, 'La descripción debe tener al menos 10 caracteres')
+        coment: z.string()
+                    .min(10, 'El comentario debe tener al menos 10 caracteres')
                     .optional(),
+        tipo_pedido: z.string().optional(),
+        tipo_pago: z.string().optional(),
         status: z.enum(['en espera', 'aceptado', 'rechazado'], {
             message: 'El estado debe ser: en espera, aceptado o rechazado'
         }).optional(),
