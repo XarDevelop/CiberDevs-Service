@@ -6,10 +6,9 @@ import { authRouter } from './auth.routes.js';
 
 const indexRoutes = Router();
 
-// Versionamiento V1: agrupado aquí
-indexRoutes.use('/v1/admin/auth', authRouter);
-indexRoutes.use('/v1/reviews', reviewRouter);
-indexRoutes.use('/v1/portfolio', portfolioRouter);
-indexRoutes.use('/v1/orders', orderRouter);
+indexRoutes.use('/admin/auth', authRouter);
+indexRoutes.use('/reviews', reviewRouter);
+indexRoutes.use('/portfolio', portfolioRouter);
+indexRoutes.use('/orders', orderRouter);
 
 export default indexRoutes;

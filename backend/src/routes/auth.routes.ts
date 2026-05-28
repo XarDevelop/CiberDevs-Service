@@ -3,6 +3,7 @@ import { AuthHandler } from '../Auth/handler/auth.handler.js';
 import { AuthService } from '../Auth/services/auth.service.js';
 import { AuthRepo } from '../Auth/repo/auth.repo.js';
 import { authLimiter } from '../middleware/rateLimiter.js';
+import { authMiddleware } from '../middleware/auth.middleware.js';
 
 export const authRouter = Router();
 
@@ -11,3 +12,5 @@ const authService = new AuthService(authRepo);
 const authHandler = new AuthHandler(authService);
 
 authRouter.post('/login', authLimiter, authHandler.login);
+authRouter.post('/logout', authHandler.logout);
+authRouter.get('/dashboard', authMiddleware, authHandler.checkSession);

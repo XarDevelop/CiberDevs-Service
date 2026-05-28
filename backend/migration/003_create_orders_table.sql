@@ -3,9 +3,11 @@
 
 CREATE TABLE IF NOT EXISTS orders (
     id SERIAL PRIMARY KEY,
-    identifier VARCHAR(255) NOT NULL,
-    contact VARCHAR(255) NOT NULL,
-    description TEXT NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    telefono VARCHAR(255) NOT NULL,
+    coment TEXT NOT NULL,
+    tipo_pedido VARCHAR(255) NOT NULL,
+    tipo_pago VARCHAR(255) NOT NULL,
     status VARCHAR(50) NOT NULL DEFAULT 'en espera',
     stage VARCHAR(50) NOT NULL DEFAULT 'pendiente',
     is_deleted BOOLEAN NOT NULL DEFAULT false,

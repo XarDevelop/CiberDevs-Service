@@ -18,9 +18,11 @@ interface Proyecto {
 
 interface Pedido {
   id: number;
-  identifier: string;
-  contact: string;
-  description: string;
+  name: string;
+  telefono: string;
+  coment: string;
+  tipo_pedido: string;
+  tipo_pago: string;
   status: 'en espera' | 'aceptado' | 'rechazado';
   stage: 'pendiente' | 'en desarrollo' | 'en produccion';
   is_deleted: boolean;
@@ -138,7 +140,7 @@ const PanelAdministracion: React.FC = () => {
 
   const toggleProyectoActivo = async (id: number) => {
     try {
-      const response = await apiRequest<Proyecto>(`/api/portfolio/${id}/toggle`, {
+      const response = await apiRequest<Proyecto>(`/portfolio/${id}/toggle`, {
         method: 'PATCH',
       });
       if (response.success) {
@@ -158,7 +160,7 @@ const PanelAdministracion: React.FC = () => {
   const saveProyecto = async (proyectoData: Partial<Proyecto>) => {
     try {
       if (editingProyecto) {
-        const response = await apiRequest<Proyecto>(`/api/portfolio/${editingProyecto.id}`, {
+        const response = await apiRequest<Proyecto>(`/portfolio/${editingProyecto.id}`, {
           method: 'PUT',
           body: JSON.stringify(proyectoData),
         });
@@ -169,7 +171,7 @@ const PanelAdministracion: React.FC = () => {
           showNotification('Proyecto actualizado correctamente', 'success');
         }
       } else {
-        const response = await apiRequest<Proyecto>('/api/portfolio', {
+        const response = await apiRequest<Proyecto>('/portfolio', {
           method: 'POST',
           body: JSON.stringify(proyectoData),
         });
@@ -433,9 +435,11 @@ const PedidosTab: React.FC<PedidosTabProps> = ({ pedidos, onUpdate, onDelete, on
             <thead>
               <tr className="table-header">
                 <th>ID</th>
-                <th>Identificador</th>
-                <th>Contacto</th>
-                <th>Descripción</th>
+                <th>Nombre</th>
+                <th>Teléfono</th>
+                <th>Comentario</th>
+                <th>Tipo Pedido</th>
+                <th>Tipo Pago</th>
                 <th>Estado</th>
                 <th>Etapa</th>
                 <th>Fecha</th>
@@ -447,15 +451,19 @@ const PedidosTab: React.FC<PedidosTabProps> = ({ pedidos, onUpdate, onDelete, on
                 <tr key={pedido.id} className="table-row">
                   <td>#{pedido.id}</td>
                   <td>
-                    <strong>{pedido.identifier}</strong>
+                    <strong>{pedido.name}</strong>
                   </td>
                   <td>
-                    <a href={`mailto:${pedido.contact}`} className="link">
-                      {pedido.contact}
-                    </a>
+                    {pedido.telefono}
                   </td>
                   <td>
-                    <span className="truncate">{pedido.description}</span>
+                    <span className="truncate">{pedido.coment}</span>
+                  </td>
+                  <td>
+                    {pedido.tipo_pedido}
+                  </td>
+                  <td>
+                    {pedido.tipo_pago}
                   </td>
                   <td>
                     <select
@@ -629,9 +637,11 @@ interface PedidoModalProps {
 
 const PedidoModal: React.FC<PedidoModalProps> = ({ pedido, onClose, onSave }) => {
   const [formData, setFormData] = useState<Partial<Pedido>>({
-    identifier: pedido.identifier,
-    contact: pedido.contact,
-    description: pedido.description,
+    name: pedido.name,
+    telefono: pedido.telefono,
+    coment: pedido.coment,
+    tipo_pedido: pedido.tipo_pedido,
+    tipo_pago: pedido.tipo_pago,
     status: pedido.status,
     stage: pedido.stage,
   });
@@ -651,31 +661,51 @@ const PedidoModal: React.FC<PedidoModalProps> = ({ pedido, onClose, onSave }) =>
 
         <form onSubmit={handleSubmit} className="modal-form">
           <div className="form-group">
-            <label className="form-label">Identificador</label>
+            <label className="form-label">Nombre</label>
             <input
               type="text"
-              value={formData.identifier}
-              onChange={(e) => setFormData({ ...formData, identifier: e.target.value })}
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               className="form-input"
             />
           </div>
 
           <div className="form-group">
-            <label className="form-label">Contacto</label>
+            <label className="form-label">Teléfono</label>
             <input
-              type="email"
-              value={formData.contact}
-              onChange={(e) => setFormData({ ...formData, contact: e.target.value })}
+              type="text"
+              value={formData.telefono}
+              onChange={(e) => setFormData({ ...formData, telefono: e.target.value })}
               className="form-input"
             />
           </div>
 
           <div className="form-group">
-            <label className="form-label">Descripción</label>
+            <label className="form-label">Comentario</label>
             <textarea
-              value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              value={formData.coment}
+              onChange={(e) => setFormData({ ...formData, coment: e.target.value })}
               className="form-input form-textarea"
+            />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Tipo de Pedido</label>
+            <input
+              type="text"
+              value={formData.tipo_pedido}
+              onChange={(e) => setFormData({ ...formData, tipo_pedido: e.target.value })}
+              className="form-input"
+            />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Tipo de Pago</label>
+            <input
+              type="text"
+              value={formData.tipo_pago}
+              onChange={(e) => setFormData({ ...formData, tipo_pago: e.target.value })}
+              className="form-input"
             />
           </div>
 

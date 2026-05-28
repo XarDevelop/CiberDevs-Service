@@ -4,33 +4,33 @@ import '../style/Hero.css'
 export default function Hero() {
   return (
     <div>
-        <section class="hero" id="inicio">
-        <div class="container">
-            <div class="hero-grid">
-                <div class="hero-content">
-                    <div class="hero-badge">Disponible para proyectos</div>
-                    <h1 class="hero-title">Tu negocio necesita una presencia <span>digital profesional</span></h1>
-                    <p class="hero-text">En la era digital, no tener una página web optimizada y presencia en redes sociales significa perder clientes todos los días. Transformamos tu negocio con soluciones web de alto impacto.</p>
-                    <div class="hero-cta">
-                        <button class="btn btn-primary btn-large">Empezar Ahora</button>
-                        <button class="btn btn-outline btn-large">Ver Servicios</button>
+        <section className="hero" id="inicio">
+        <div className="container">
+            <div className="hero-grid">
+                <div className="hero-content">
+                    <div className="hero-badge">Disponible para proyectos</div>
+                    <h1 className="hero-title">Tu negocio necesita una presencia <span>digital profesional</span></h1>
+                    <p className="hero-text">En la era digital, no tener una página web optimizada y presencia en redes sociales significa perder clientes todos los días. Transformamos tu negocio con soluciones web de alto impacto.</p>
+                    <div className="hero-cta">
+                        <button className="btn btn-primary btn-large">Empezar Ahora</button>
+                        <button className="btn btn-outline btn-large">Ver Servicios</button>
                     </div>
                 </div>
-                <div class="hero-visual">
-                    <div class="hero-image-wrapper">
-                        <div class="hero-image">
-                            <div class="mockup-browser">
-                                <div class="mockup-header">
-                                    <img src="/src/assets/estado_design 2.jpg" alt=""></img>
+                <div className="hero-visual">
+                    <div className="hero-image-wrapper">
+                        <div className="hero-image">
+                            <div className="mockup-browser">
+                                <div className="mockup-header">
+                                    <img src="/src/assets/estado_design 2.jpg" alt="Estado de diseño - Vista previa de proyecto desarrollo web"></img>
                                 </div>
-                                <div class="mockup-body">
-                                    <div class="mockup-block short"></div>
-                                    <div class="mockup-block medium"></div>
-                                    <div class="mockup-block long"></div>
-                                    <div class="mockup-card">
-                                        <div class="mockup-card-item"></div>
-                                        <div class="mockup-card-item"></div>
-                                        <div class="mockup-card-item"></div>
+                                <div className="mockup-body">
+                                    <div className="mockup-block short"></div>
+                                    <div className="mockup-block medium"></div>
+                                    <div className="mockup-block long"></div>
+                                    <div className="mockup-card">
+                                        <div className="mockup-card-item"></div>
+                                        <div className="mockup-card-item"></div>
+                                        <div className="mockup-card-item"></div>
                                     </div>
                                 </div>
                             </div>

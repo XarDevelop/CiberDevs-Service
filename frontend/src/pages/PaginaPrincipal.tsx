@@ -1,4 +1,3 @@
-import React from 'react'
 import Header from '../components/Header'
 import Hero from '../components/Hero'
 import Problema from '../components/Problema'
@@ -9,20 +8,24 @@ import About from '../components/About'
 import FAQ from '../components/FAQ'
 import CTA from '../components/CTA'
 import Footer from '../components/Footer'
+import SEO from '../components/SEO'
+import StructuredData from '../components/StructuredData'
 
 export default function PaginaPrincipal() {
   return (
-    <div>
-      <Header></Header>
-      <Hero></Hero>
-      <Problema></Problema>
-      <Servicios></Servicios>
-      <Portafolio></Portafolio>
-      <Testimonio></Testimonio>
-      <About></About>
-      <FAQ></FAQ>
-      <CTA></CTA>
-      <Footer></Footer>
-    </div>
+    <>
+      <SEO />
+      <StructuredData />
+      <Header />
+      <Hero />
+      <Problema />
+      <Servicios />
+      <Portafolio />
+      <Testimonio />
+      <About />
+      <FAQ />
+      <CTA />
+      <Footer />
+    </>
   )
 }

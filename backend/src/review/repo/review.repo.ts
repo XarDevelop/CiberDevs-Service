@@ -11,11 +11,11 @@ export class ReviewRepository implements IReviewRepository {
 
     async createReview(data: CreateReviewDTO): Promise<Review> {
         const query = `
-            INSERT INTO reviews (author_name, author_role, avatar_url, content, rating)
-            VALUES ($1, $2, $3, $4, $5)
+            INSERT INTO reviews (name, role, content, stars)
+            VALUES ($1, $2, $3, $4)
             RETURNING *;
         `;
-        const values = [data.author_name, data.author_role, data.avatar_url ?? null, data.content, data.rating];
+        const values = [data.name, data.role, data.content, data.stars];
         const result = await pool.query(query, values);
         return result.rows[0];
     }

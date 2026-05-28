@@ -1,8 +1,10 @@
 export interface Order {
     id: number;
-    identifier: string;
-    contact: string;
-    description: string;
+    name: string;
+    telefono: string;
+    coment: string;
+    tipo_pedido: string;
+    tipo_pago: string;
     status: string;
     stage: string;
     is_deleted: boolean;

@@ -17,11 +17,11 @@ export class OrderRepository implements IOrderRepository {
 
     async createOrder(data: CreateOrderDTO): Promise<Order> {
         const query = `
-            INSERT INTO orders (identifier, contact, description)
-            VALUES ($1, $2, $3)
+            INSERT INTO orders (name, telefono, coment, tipo_pedido, tipo_pago)
+            VALUES ($1, $2, $3, $4, $5)
             RETURNING *
         `;
-        const values = [data.identifier, data.contact, data.description];
+        const values = [data.name, data.telefono, data.coment, data.tipo_pedido, data.tipo_pago];
         const result = await pool.query(query, values);
         return result.rows[0];
     }

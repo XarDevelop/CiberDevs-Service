@@ -3,11 +3,11 @@
 
 CREATE TABLE IF NOT EXISTS reviews (
     id SERIAL PRIMARY KEY,
-    author_name VARCHAR(100) NOT NULL,
-    author_role VARCHAR(150) NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    role VARCHAR(150) NOT NULL,
     avatar_url VARCHAR(255),
     content TEXT NOT NULL,
-    rating SMALLINT NOT NULL CHECK (rating >= 1 AND rating <= 5),
+    stars SMALLINT NOT NULL CHECK (stars >= 1 AND stars <= 5),
     is_active BOOLEAN NOT NULL DEFAULT true,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
