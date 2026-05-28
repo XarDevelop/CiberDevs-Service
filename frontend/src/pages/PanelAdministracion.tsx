@@ -64,13 +64,7 @@ const PanelAdministracion: React.FC = () => {
   useEffect(() => {
     const checkSession = async () => {
       try {
-        const token = getToken();
-        if (!token) {
-          navigate('/LoginPanelAdministracion2026');
-          return;
-        }
         const res = await fetch(`${API_BASE}/admin/auth/dashboard`, {
-          headers: { Authorization: `Bearer ${token}` },
           credentials: 'include',
         });
         if (res.status === 401) {
