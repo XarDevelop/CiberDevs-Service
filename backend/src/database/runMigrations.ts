@@ -2,47 +2,54 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { pool } from './index.js';
-// Importamos dotenv para asegurarnos de que levante variables si lo corremos de forma independiente
-import 'dotenv/config'; 
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-async function runMigrations() {
-    console.log('Iniciando proceso de migraciones...');
+export async function runMigrations() {
+    const migrationDir = path.join(__dirname, '..', '..', '..', 'migration');
+    
+    if (!fs.existsSync(migrationDir)) {
+        console.log('No migration directory found, skipping migrations');
+        return;
+    }
+
+    const files = fs.readdirSync(migrationDir)
+        .filter(f => f.endsWith('.sql'))
+        .sort();
+
+    if (files.length === 0) {
+        console.log('No migration files found');
+        return;
+    }
+
     const client = await pool.connect();
 
     try {
-        // Obtenemos los archivos SQL de la carpeta 'migration'
-        const migrationDir = path.join(__dirname, '../../../migration');
-        const files = fs.readdirSync(migrationDir).sort(); // Los ordena alfanuméricamente (001_, 002_, etc.)
-
-        // Iniciamos la transacción (buena práctica para las migraciones)
         await client.query('BEGIN');
 
         for (const file of files) {
-            if (file.endsWith('.sql')) {
-                console.log(`Ejecutando migración: ${file}`);
-                const filePath = path.join(migrationDir, file);
-                const sql = fs.readFileSync(filePath, 'utf8');
-                
-                // Ejecutamos el archivo SQL
-                await client.query(sql);
-                console.log(`✅ Migración ${file} completada.`);
-            }
+            console.log(`Running migration: ${file}`);
+            const filePath = path.join(migrationDir, file);
+            const sql = fs.readFileSync(filePath, 'utf8');
+            await client.query(sql);
+            console.log(`Migration ${file} completed`);
         }
 
         await client.query('COMMIT');
-        console.log('🎉 Todas las migraciones terminaron exitosamente.');
+        console.log('All migrations completed successfully');
     } catch (error) {
         await client.query('ROLLBACK');
-        console.error('❌ Error corriendo las migraciones. Se revirtieron los cambios.', error);
+        console.error('Migration failed, rolling back:', error);
+        throw error;
     } finally {
         client.release();
-        // Cerramos el pool para que el script termine en la terminal
-        await pool.end();
     }
 }
 
-// Ejecutar si llamamos a este script directamente
-runMigrations();
+const isMainModule = process.argv[1]?.includes('runMigrations');
+if (isMainModule) {
+    runMigrations()
+        .then(() => pool.end())
+        .catch(() => process.exit(1));
+}

@@ -1,6 +1,6 @@
 import { type Request, type Response, type NextFunction } from 'express';
+import { config } from '../config/index.js';
 
-// Definimos una clase para errores operacionales predecibles
 export class AppError extends Error {
     public readonly statusCode: number;
     public readonly isOperational: boolean;
@@ -9,28 +9,38 @@ export class AppError extends Error {
         super(message);
         this.statusCode = statusCode;
         this.isOperational = true;
+        Object.setPrototypeOf(this, AppError.prototype);
         Error.captureStackTrace(this, this.constructor);
     }
 }
 
 export const errorHandler = (
     err: Error | AppError,
-    req: Request,
+    _req: Request,
     res: Response,
-    next: NextFunction
+    _next: NextFunction
 ) => {
-    let statusCode = 500;
-    let message = 'Error interno del servidor';
-
     if (err instanceof AppError) {
-        statusCode = err.statusCode;
-        message = err.message;
-    } else {
-        console.error('💥 ERROR INESPERADO:', err);
+        res.status(err.statusCode).json({
+            success: false,
+            message: err.message,
+        });
+        return;
     }
 
-    res.status(statusCode).json({
+    console.error('Unhandled error:', err);
+
+    res.status(500).json({
         success: false,
-        message,
+        message: config.isProduction
+            ? 'Error interno del servidor'
+            : err.message,
+    });
+};
+
+export const notFoundHandler = (_req: Request, res: Response) => {
+    res.status(404).json({
+        success: false,
+        message: 'Ruta no encontrada',
     });
 };

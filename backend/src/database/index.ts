@@ -1,26 +1,42 @@
 import { Pool } from 'pg';
+import { config } from '../config/index.js';
 
-// Configuración de la conexión mediante un Pool para reutilizar conexiones, que es considerado una buena práctica
-export const pool = new Pool({
-    host: process.env.DB_HOST || 'localhost',
-    port: parseInt(process.env.DB_PORT || '5432', 10),
-    user: process.env.DB_USER || 'postgres',
-    password: process.env.DB_PASSWORD || 'supersecretpassword',
-    database: process.env.DB_NAME || 'ciberdevs_db',
-    // Configuraciones óptimas para producción
-    max: 20, // Máximo número de clientes en el pool
-    idleTimeoutMillis: 30000, // Tiempo máximo que un cliente puede estar inactivo
-    connectionTimeoutMillis: 2000, // Tiempo máximo para conectar
+const poolOptions = config.database.url
+    ? {
+        connectionString: config.database.url,
+        ssl: config.database.ssl ? { rejectUnauthorized: true } : false,
+        max: config.database.poolMax,
+        idleTimeoutMillis: 30000,
+        connectionTimeoutMillis: 2000,
+    }
+    : {
+        host: config.database.host,
+        port: config.database.port,
+        user: config.database.user,
+        password: config.database.password,
+        database: config.database.name,
+        max: config.database.poolMax,
+        idleTimeoutMillis: 30000,
+        connectionTimeoutMillis: 2000,
+    };
+
+export const pool = new Pool(poolOptions);
+
+pool.on('error', (err) => {
+    console.error('Unexpected error on idle database client', err);
 });
 
-// Función para inicializar y verificar la base de datos en el arranque de la app
 export const connectDB = async () => {
     try {
         const client = await pool.connect();
-        console.log('✅ Base de datos PostgreSQL conectada exitosamente');
-        client.release(); // Siempre debemos liberar el cliente back al pool
+        console.log('Database connected successfully');
+        client.release();
     } catch (error) {
-        console.error('❌ Error conectando a la base de datos PostgreSQL:', error);
-        process.exit(1); // Detiene el proceso con error si no puede conectar
+        console.error('Error connecting to database:', error);
+        process.exit(1);
     }
+};
+
+export const disconnectDB = async () => {
+    await pool.end();
 };
