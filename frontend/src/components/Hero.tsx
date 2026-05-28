@@ -1,5 +1,6 @@
 import React from 'react'
 import '../style/Hero.css'
+import heroImage from '../assets/estado_design 2.jpg'
 
 export default function Hero() {
   return (
@@ -21,7 +22,7 @@ export default function Hero() {
                         <div className="hero-image">
                             <div className="mockup-browser">
                                 <div className="mockup-header">
-                                    <img src="/src/assets/estado_design 2.jpg" alt="Estado de diseño - Vista previa de proyecto desarrollo web"></img>
+                                    <img src={heroImage} alt="Estado de diseño - Vista previa de proyecto desarrollo web"></img>
                                 </div>
                                 <div className="mockup-body">
                                     <div className="mockup-block short"></div>
