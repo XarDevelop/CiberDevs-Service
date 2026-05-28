@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../style/PanelAdministracion.css';
 
 // ============================================
@@ -47,6 +48,8 @@ const API_BASE = '/api';
 // ============================================
 
 const PanelAdministracion: React.FC = () => {
+  const navigate = useNavigate();
+  const [authChecked, setAuthChecked] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<'proyectos' | 'pedidos'>('proyectos');
   const [proyectos, setProyectos] = useState<Proyecto[]>([]);
   const [pedidos, setPedidos] = useState<Pedido[]>([]);
@@ -57,6 +60,30 @@ const PanelAdministracion: React.FC = () => {
   const [showPedidoModal, setShowPedidoModal] = useState<boolean>(false);
   const [editingPedido, setEditingPedido] = useState<Pedido | null>(null);
   const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+
+  useEffect(() => {
+    const checkSession = async () => {
+      try {
+        const token = getToken();
+        if (!token) {
+          navigate('/LoginPanelAdministracion2026');
+          return;
+        }
+        const res = await fetch(`${API_BASE}/admin/auth/dashboard`, {
+          headers: { Authorization: `Bearer ${token}` },
+          credentials: 'include',
+        });
+        if (res.status === 401) {
+          navigate('/LoginPanelAdministracion2026');
+          return;
+        }
+        setAuthChecked(true);
+      } catch {
+        navigate('/LoginPanelAdministracion2026');
+      }
+    };
+    checkSession();
+  }, []);
 
   const getToken = (): string | null => {
     const match = document.cookie.match(/token=([^;]+)/);
@@ -219,6 +246,10 @@ const PanelAdministracion: React.FC = () => {
       showNotification(err.message, 'error');
     }
   };
+
+  if (!authChecked) {
+    return <div className="loading">Verificando sesión...</div>;
+  }
 
   return (
     <div className="panel-container">
