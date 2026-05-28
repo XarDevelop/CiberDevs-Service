@@ -4,7 +4,7 @@ services:
     env: node
     region: ohio
     plan: free
-    buildCommand: cd frontend && npm install && npm run build && cd ../backend && npm install && npm run build
+    buildCommand: cd frontend && npm install --include=dev && npm run build && cd ../backend && npm install --include=dev && npm run build
     startCommand: node backend/dist/src/index.js
     envVars:
       - key: NODE_ENV
