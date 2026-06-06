@@ -35,11 +35,12 @@ export class PortfolioRepository implements IPortfolioRepository {
     }
 
     async updateProject(id: number, data: Partial<CreatePortfolioDTO>): Promise<PortfolioProject | null> {
-        const fields = Object.keys(data) as (keyof CreatePortfolioDTO)[];
+        const allowedFields = ['title', 'description', 'icon', 'image_url', 'project_url'];
+        const fields = Object.keys(data).filter(f => allowedFields.includes(f));
         if (fields.length === 0) return null;
 
         const setClauses = fields.map((field, i) => `${field} = $${i + 1}`);
-        const values: unknown[] = fields.map(f => data[f] ?? null);
+        const values: unknown[] = fields.map(f => data[f as keyof CreatePortfolioDTO] ?? null);
         values.push(id);
 
         const query = `

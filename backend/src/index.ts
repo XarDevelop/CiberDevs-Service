@@ -18,7 +18,7 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
-app.use(helmet());
+app.use(helmet({ contentSecurityPolicy: false }));
 app.use(cors({ origin: config.cors.origin, credentials: true }));
 app.use(compression());
 app.use(morgan(config.isProduction ? 'combined' : 'dev'));
@@ -44,24 +44,27 @@ if (config.isProduction) {
 app.use(notFoundHandler);
 app.use(errorHandler);
 
-const server = app.listen(config.port, () => {
-    console.log(`Server running on http://localhost:${config.port} [${config.nodeEnv}]`);
-});
+const start = async () => {
+    await connectDB();
+    await runMigrations();
 
-const gracefulShutdown = async (signal: string) => {
-    console.log(`\n${signal} received. Shutting down gracefully...`);
-    server.close(async () => {
-        await disconnectDB();
-        console.log('Server closed');
-        process.exit(0);
+    const server = app.listen(config.port, () => {
+        console.log(`Server running on http://localhost:${config.port} [${config.nodeEnv}]`);
     });
+
+    const gracefulShutdown = async (signal: string) => {
+        console.log(`\n${signal} received. Shutting down gracefully...`);
+        server.close(async () => {
+            await disconnectDB();
+            console.log('Server closed');
+            process.exit(0);
+        });
+    };
+
+    process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+    process.on('SIGINT', () => gracefulShutdown('SIGINT'));
 };
 
-process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
-process.on('SIGINT', () => gracefulShutdown('SIGINT'));
-
-connectDB().then(async () => {
-    await runMigrations();
-});
+start();
 
 export default app;

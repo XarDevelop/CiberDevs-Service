@@ -27,11 +27,12 @@ export class OrderRepository implements IOrderRepository {
     }
 
     async updateOrder(id: number, data: Partial<CreateOrderDTO & { status: string; stage: string }>): Promise<Order | null> {
-        const fields = Object.keys(data) as (keyof typeof data)[];
+        const allowedFields = ['name', 'telefono', 'coment', 'tipo_pedido', 'tipo_pago', 'status', 'stage'];
+        const fields = Object.keys(data).filter(f => allowedFields.includes(f));
         if (fields.length === 0) return null;
 
         const setClauses = fields.map((field, i) => `${field} = $${i + 1}`);
-        const values: unknown[] = fields.map(f => data[f] ?? null);
+        const values: unknown[] = fields.map(f => data[f as keyof typeof data] ?? null);
         values.push(id);
 
         const query = `
