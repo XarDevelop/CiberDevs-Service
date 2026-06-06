@@ -29,7 +29,7 @@ export default function Problema() {
                 </div>
             </div>
             <div className="problem-cta">
-                <button className="btn btn-primary btn-large">Quiero solucionarlo</button>
+                <a href="#solucion" className="btn btn-primary btn-large">Quiero solucionarlo</a>
             </div>
         </div>
     </section>

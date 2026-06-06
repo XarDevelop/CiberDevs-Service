@@ -13,8 +13,8 @@ export default function Hero() {
                     <h1 className="hero-title">Tu negocio necesita una presencia <span>digital profesional</span></h1>
                     <p className="hero-text">En la era digital, no tener una página web optimizada y presencia en redes sociales significa perder clientes todos los días. Transformamos tu negocio con soluciones web de alto impacto.</p>
                     <div className="hero-cta">
-                        <button className="btn btn-primary btn-large">Empezar Ahora</button>
-                        <button className="btn btn-outline btn-large">Ver Servicios</button>
+                        <a href="#solucion" className="btn btn-primary btn-large">Empezar Ahora</a>
+                        <a href="#solucion" className="btn btn-outline btn-large">Ver Servicios</a>
                     </div>
                 </div>
                 <div className="hero-visual">

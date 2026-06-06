@@ -14,7 +14,7 @@ export default function Header() {
                     <a href="#testimonios" className="nav-link">Testimonios</a>
                     <a href="#faq" className="nav-link">FAQ</a>
                     <a href="#contacto" className="nav-link">Contacto</a>
-                    <button className="btn btn-primary">Solicitar Presupuesto</button>
+                    <button className="btn btn-primary" disabled>Solicitar Presupuesto</button>
                 </nav>
             </div>
         </div>
