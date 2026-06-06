@@ -1,7 +1,6 @@
-import React from 'react'
+import { useState, useEffect } from 'react'
 import '../style/Portafolio.css'
 import axios from 'axios'
-import {useState,useEffect} from 'react'
 import PortafolioElement from './PortafolioElement'
 
  interface PortafolioProps{
@@ -23,15 +22,21 @@ import PortafolioElement from './PortafolioElement'
 export default function Portafolio() {
     const [listaProyectos,setListaProyectos]=useState<PortafolioProps[]>([]);
     const [hayProyectos,setHayProyectos]=useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string>('');
+
     useEffect(()=>{
         const TraerProyectos=async ()=>{
             try{
+            setLoading(true);
             const response=await axios.get<RespuestaPortafolio>('/api/portfolio');
             const data= response.data.data;
             setHayProyectos(response.data.success)
             setListaProyectos(data);
             }catch(e){
-                console.log(e)
+                setError('Error al cargar proyectos. Intenta de nuevo.');
+            }finally{
+                setLoading(false);
             }
         }
 
@@ -49,10 +54,12 @@ export default function Portafolio() {
                 <h2 className="section-title">Muestra de proyectos</h2>
                 <p className="section-subtitle">Algunos de los proyectos que hemos desarrollado para nuestros clientes</p>
             </div>
-            {hayProyectos && (<div className="portfolio-grid">
+            {loading && (<p style={{ textAlign: 'center', color: '#666' }}>Cargando proyectos...</p>)}
+            {error && (<p style={{ textAlign: 'center', color: '#c62828' }}>{error}</p>)}
+            {!loading && !error && hayProyectos && (<div className="portfolio-grid">
                 {MostrarPortafolios}
             </div>)}
-            {!hayProyectos && (<div className='warning-portfolio'>
+            {!loading && !error && !hayProyectos && (<div className='warning-portfolio'>
                 <p className='p-warning'>
                     No hay proyectos visibles
                 </p>

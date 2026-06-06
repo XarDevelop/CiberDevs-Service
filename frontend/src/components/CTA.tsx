@@ -1,4 +1,3 @@
-import React from 'react'
 import '../style/CTA.css'
 
 export default function CTA() {
@@ -7,7 +6,7 @@ export default function CTA() {
         <section className="cta-final">
         <div className="container">
             <span className="section-label">Únete a CiberDev</span>
-            <h2 className="section-title">Tu competencia ya está online. <br></br> ¿Y tú?</h2>
+            <h2 className="section-title">Tu competencia ya está online. <br /> ¿Y tú?</h2>
             <p className="section-subtitle">Cada día que pasa sin presencia digital profesional es un día perdiendo clientes potenciales. Invierte en el futuro de tu negocio hoy mismo con un equipo que entiende de resultados.</p>
             <a href="#solucion" className="btn btn-white btn-large">Comprar Servicio Ahora</a>
             <div className="cta-features">

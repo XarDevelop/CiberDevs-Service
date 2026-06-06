@@ -81,8 +81,7 @@ const PanelAdministracion: React.FC = () => {
 
   const getToken = (): string | null => {
     const match = document.cookie.match(/token=([^;]+)/);
-    if (match) return match[1];
-    return localStorage.getItem('admin_token');
+    return match ? match[1] : null;
   };
 
   const apiRequest = async <T,>(

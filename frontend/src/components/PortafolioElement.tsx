@@ -1,4 +1,3 @@
-import React from 'react'
 import '../style/Portafolio.css'
 
  interface PortafolioProps{
@@ -21,7 +20,7 @@ export default function PortafolioElement({props}:Props) {
     <div className="portfolio-item">
         <div className="portfolio-placeholder">
             {props.image_url ? (
-              <img src={props.image_url} alt={props.title} className="portfolio-image" />
+              <img src={props.image_url} alt={props.title} className="portfolio-image" loading="lazy" />
             ) : (
               <>
                 <div className="portfolio-placeholder-icon">{props.icon}</div>

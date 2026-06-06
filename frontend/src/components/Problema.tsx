@@ -1,4 +1,3 @@
-import React from 'react'
 import '../style/Problema.css'
 
 export default function Problema() {

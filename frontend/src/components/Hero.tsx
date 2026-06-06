@@ -1,4 +1,3 @@
-import React from 'react'
 import '../style/Hero.css'
 import heroImage from '../assets/estado_design 2.jpg'
 

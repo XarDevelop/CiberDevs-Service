@@ -1,6 +1,5 @@
-import React from 'react'
+import { useState } from 'react'
 import '../style/Servicios.css'
-import {useState} from 'react'
 import FormularioDeServicio from './FormularioDeServicio';
 
 export default function Servicios() {

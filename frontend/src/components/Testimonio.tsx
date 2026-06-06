@@ -1,7 +1,6 @@
-import React from 'react'
+import { useState, useEffect } from 'react'
 import '../style/Testimonio.css'
 import TestimonioGrid from './TestimonioGrid'
-import { useState, useEffect } from 'react'
 import axios from 'axios'
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
@@ -40,6 +39,8 @@ export default function Testimonio() {
     const [hayTestimonios, setHayTestimonios] = useState<boolean>(false);
     const [mostrarForm, setMostrarForm] = useState<boolean>(false)
     const [listaTestimonios, setListaTestimonios] = useState<InfoTestimonio[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string>('');
 
     const [nombre, setNombre] = useState<string>('');
     const [comentario, setComentario] = useState<string>('');
@@ -49,12 +50,15 @@ export default function Testimonio() {
 
     const TraerTestimonios = async () => {
         try {
+            setLoading(true);
             const response = await axios.get<RespuestaTestimonio>('/api/reviews');
             const data = response.data.data;
             setListaTestimonios(data);
             setHayTestimonios(response.data.success);
         } catch (error) {
-            console.log(error)
+            setError('Error al cargar testimonios.');
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -125,7 +129,9 @@ export default function Testimonio() {
                         <p className="section-subtitle">Lo que dicen quienes ya confiaron en CiberDev</p>
                     </div>
                     
-                    {hayTestimonios ? (
+                    {loading && (<p style={{ textAlign: 'center', color: '#666' }}>Cargando testimonios...</p>)}
+                    {error && (<p style={{ textAlign: 'center', color: '#c62828' }}>{error}</p>)}
+                    {!loading && !error && (hayTestimonios ? (
                         <div className="testimonials-grid">
                             {MostrarTestimonios}
                         </div>
@@ -133,7 +139,7 @@ export default function Testimonio() {
                         <div className='warning-testimonio'>
                             <p className='p-warning'>No hay testimonios</p>
                         </div>
-                    )}
+                    ))}
                 </div>
 
                 <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4, mb: 2 }}>
