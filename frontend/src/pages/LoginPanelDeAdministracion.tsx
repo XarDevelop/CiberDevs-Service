@@ -107,8 +107,8 @@ const Login = () => {
   const handleLogout = async () => {
     try {
       await axios.post('/api/admin/auth/logout', {}, { withCredentials: true });
-    } catch (err) {
-      console.log('No se pudo contactar el servidor para cerrar sesión');
+    } catch {
+      // Silently ignore logout errors
     } finally {
       window.location.reload();
     }

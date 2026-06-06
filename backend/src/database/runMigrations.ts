@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { pool } from './index.js';
+import { config as appConfig } from '../config/index.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -28,11 +29,25 @@ export async function runMigrations() {
     try {
         await client.query('BEGIN');
 
+        await client.query(`
+            CREATE TABLE IF NOT EXISTS _migrations (
+                name TEXT PRIMARY KEY,
+                executed_at TIMESTAMPTZ DEFAULT NOW()
+            )
+        `);
+
+        const { rows: executed } = await client.query('SELECT name FROM _migrations');
+        const executedNames = new Set(executed.map((r: { name: string }) => r.name));
+
         for (const file of files) {
+            if (executedNames.has(file)) {
+                continue;
+            }
             console.log(`Running migration: ${file}`);
             const filePath = path.join(migrationDir, file);
             const sql = fs.readFileSync(filePath, 'utf8');
             await client.query(sql);
+            await client.query('INSERT INTO _migrations (name) VALUES ($1)', [file]);
             console.log(`Migration ${file} completed`);
         }
 
@@ -40,16 +55,11 @@ export async function runMigrations() {
         console.log('All migrations completed successfully');
     } catch (error) {
         await client.query('ROLLBACK');
-        console.error('Migration failed, rolling back:', error);
+        if (!appConfig.isProduction) {
+            console.error('Migration failed, rolling back:', error);
+        }
         throw error;
     } finally {
         client.release();
     }
-}
-
-const isMainModule = process.argv[1]?.includes('runMigrations');
-if (isMainModule) {
-    runMigrations()
-        .then(() => pool.end())
-        .catch(() => process.exit(1));
 }

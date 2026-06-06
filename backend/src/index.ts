@@ -54,7 +54,13 @@ const start = async () => {
 
     const gracefulShutdown = async (signal: string) => {
         console.log(`\n${signal} received. Shutting down gracefully...`);
+        const forceExit = setTimeout(() => {
+            console.error('Forced shutdown after timeout');
+            process.exit(1);
+        }, 10000);
+        forceExit.unref();
         server.close(async () => {
+            clearTimeout(forceExit);
             await disconnectDB();
             console.log('Server closed');
             process.exit(0);
@@ -64,6 +70,16 @@ const start = async () => {
     process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
     process.on('SIGINT', () => gracefulShutdown('SIGINT'));
 };
+
+process.on('unhandledRejection', (reason) => {
+    console.error('Unhandled rejection:', reason);
+    process.exit(1);
+});
+
+process.on('uncaughtException', (error) => {
+    console.error('Uncaught exception:', error);
+    process.exit(1);
+});
 
 start();
 

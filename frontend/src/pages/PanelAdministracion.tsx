@@ -71,13 +71,14 @@ const PanelAdministracion: React.FC = () => {
           navigate('/LoginPanelAdministracion2026');
           return;
         }
+        if (!res.ok) throw new Error('Server error');
         setAuthChecked(true);
       } catch {
-        navigate('/LoginPanelAdministracion2026');
+        setAuthChecked(true);
       }
     };
     checkSession();
-  }, []);
+  }, [navigate]);
 
   const getToken = (): string | null => {
     const match = document.cookie.match(/token=([^;]+)/);
@@ -105,8 +106,8 @@ const PanelAdministracion: React.FC = () => {
     });
 
     if (response.status === 401) {
-      window.location.href = '/LoginPanelAdministracion2026';
-      throw new Error('Sesión expirada. Por favor inicia sesión nuevamente.');
+      navigate('/LoginPanelAdministracion2026');
+      throw new Error('Sesión expirada.');
     }
 
     const data = await response.json();

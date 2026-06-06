@@ -31,8 +31,8 @@ export default function Servicios() {
                         <li className="feature-item">Hosting y dominio (1 año)</li>
                         <li className="feature-item">Soporte técnico 30 días</li>
                     </ul>
-                    <button className="btn btn-outline" onClick={()=>{setBasico(!Basico);setPro(false);setPremium(false)}}>Seleccionar Plan</button>
-                    {Basico && <FormularioDeServicio tipo={'Basico'}></FormularioDeServicio>}
+                    <button className="btn btn-outline" onClick={()=>{setBasico(!Basico);setPro(false);setPremium(false)}} aria-expanded={Basico} aria-controls="form-basico">Seleccionar Plan</button>
+                    {Basico && <div id="form-basico"><FormularioDeServicio tipo={'Basico'}></FormularioDeServicio></div>}
                 </div>
 
                 <div>
@@ -50,9 +50,9 @@ export default function Servicios() {
                         <li className="feature-item">Reportes de analytics</li>
                         <li className="feature-item">Soporte técnico 60 días</li>
                     </ul>
-                    <button className="btn btn-white" onClick={()=>{setBasico(false);setPro(!Pro);setPremium(false)}}>Seleccionar Plan</button>
+                    <button className="btn btn-white" onClick={()=>{setBasico(false);setPro(!Pro);setPremium(false)}} aria-expanded={Pro} aria-controls="form-pro">Seleccionar Plan</button>
                 </div>
-                {Pro && <FormularioDeServicio tipo={'Pro'}></FormularioDeServicio>}
+                {Pro && <div id="form-pro"><FormularioDeServicio tipo={'Pro'}></FormularioDeServicio></div>}
                 </div>
 
 
@@ -72,8 +72,8 @@ export default function Servicios() {
                     <p className='p-span'>
                         <strong>Nota:</strong> El cliente paga un 5% de sus ganancias mensuales como royalty por la inversión compartida.
                     </p>
-                    <button className="btn btn-outline" onClick={()=>{setBasico(false);setPro(false);setPremium(!Premium)}}>Seleccionar Plan</button>
-                    {Premium && <FormularioDeServicio tipo={'Premium'}></FormularioDeServicio>}
+                    <button className="btn btn-outline" onClick={()=>{setBasico(false);setPro(false);setPremium(!Premium)}} aria-expanded={Premium} aria-controls="form-premium">Seleccionar Plan</button>
+                    {Premium && <div id="form-premium"><FormularioDeServicio tipo={'Premium'}></FormularioDeServicio></div>}
                 </div>
             </div>
         </div>

@@ -42,7 +42,7 @@ export default function FormularioDeServicio({ tipo }: Propiedades) {
   };
 
   // ─── Enviar pedido al backend ──────────────────────────────────────
-  const enviarPedidoBackend = async (): Promise<void> => {
+  const enviarPedidoBackend = async (): Promise<boolean> => {
     const pedido: Pedido = {
       name: nombre,
       coment: comentario,
@@ -52,10 +52,12 @@ export default function FormularioDeServicio({ tipo }: Propiedades) {
     };
 
     try {
-      const response = await axios.post('/api/orders', pedido);
-      console.log('Pedido guardado:', response.data.message);
-    } catch (error) {
-      console.error('Error al guardar pedido:', error);
+      await axios.post('/api/orders', pedido);
+      return true;
+    } catch {
+      setErrorMsg('Error al registrar el pedido. Intenta de nuevo.');
+      setEstanRellenas(false);
+      return false;
     }
   };
 
@@ -83,8 +85,9 @@ export default function FormularioDeServicio({ tipo }: Propiedades) {
 
   const ProcessPedidoWhatsApp = async (): Promise<void> => {
     if (!validarCampos()) return;
+    const saved = await enviarPedidoBackend();
+    if (!saved) return;
     sendWhatsAppMessage();
-    await enviarPedidoBackend();
   };
 
   // ═══════════════════════════════════════════════════════════════════
@@ -131,8 +134,9 @@ export default function FormularioDeServicio({ tipo }: Propiedades) {
       `Teléfono de contacto: ${telefono}\n\n` +
       `Saludos.`;
 
+    const saved = await enviarPedidoBackend();
+    if (!saved) return;
     openGmailWebComposer(correoDestino, asuntoGmail, emailBody);
-    await enviarPedidoBackend();
   };
 
   // ═══════════════════════════════════════════════════════════════════

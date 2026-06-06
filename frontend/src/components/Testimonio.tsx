@@ -41,6 +41,7 @@ export default function Testimonio() {
     const [listaTestimonios, setListaTestimonios] = useState<InfoTestimonio[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string>('');
+    const [submitError, setSubmitError] = useState<string>('');
 
     const [nombre, setNombre] = useState<string>('');
     const [comentario, setComentario] = useState<string>('');
@@ -87,10 +88,9 @@ export default function Testimonio() {
         }
 
         try {
-            const response = await axios.post('/api/reviews', newTestimonio);
-            const data = response.data.message;
-            console.log(data);
+            await axios.post('/api/reviews', newTestimonio);
             
+            setSubmitError('');
             setNombre('');
             setComentario('');
             setRol('');
@@ -98,8 +98,8 @@ export default function Testimonio() {
             setMostrarForm(false);
             setEstanRellenas(true);
             TraerTestimonios();
-        } catch (error) {
-            console.log(error)
+        } catch {
+            setSubmitError('Error al enviar el testimonio. Intenta de nuevo.');
         }
     }
 
@@ -234,6 +234,12 @@ export default function Testimonio() {
                             {!estanRellenas && (
                                 <Typography color="error" variant="body2" align="center" sx={{ mt: 1 }}>
                                     Por favor completa todos los campos obligatorios
+                                </Typography>
+                            )}
+
+                            {submitError && (
+                                <Typography color="error" variant="body2" align="center" sx={{ mt: 1 }}>
+                                    {submitError}
                                 </Typography>
                             )}
 
