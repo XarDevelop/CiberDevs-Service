@@ -5,7 +5,6 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import InputAdornment from '@mui/material/InputAdornment';
 import Button from '@mui/material/Button';
 import Rating from '@mui/material/Rating';
 import Typography from '@mui/material/Typography';

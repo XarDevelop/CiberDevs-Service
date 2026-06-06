@@ -6,14 +6,14 @@ const schema = {
   name: 'CiberDev',
   description: 'Desarrollo web profesional y presencia digital para negocios.',
   url: 'https://ciberdev.com/',
-  telephone: '+34-513-66196',
+  telephone: '+53-51366196',
   email: 'francislopez0507@gmail.com',
   address: {
     '@type': 'PostalAddress',
-    addressLocality: 'Valencia',
-    addressCountry: 'ES',
+    addressLocality: 'La Habana, El Vedado',
+    addressCountry: 'CU',
   },
-  sameAs: ['https://wa.me/3451366196'],
+  sameAs: ['https://wa.me/5351366196'],
 };
 
 export default function StructuredData() {
