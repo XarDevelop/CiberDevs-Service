@@ -10,7 +10,8 @@ export class AuthService implements IAuthService {
         const hash = this.authRepo.getAdminPasswordHash();
     
         if (!hash) {
-            throw new Error('Server configuration error: ADMIN_PASSWORD_HASH is missing in .env');
+            console.error('ADMIN_PASSWORD_HASH is not configured');
+            return null;
         }
 
         const isMatch = await bcrypt.compare(password, hash);
@@ -18,7 +19,6 @@ export class AuthService implements IAuthService {
             return null;
         }
 
-        // Retorna el token indicando el rol admin
         const token = generateToken({ role: 'admin' });
         return token;
     }

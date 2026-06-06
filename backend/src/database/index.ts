@@ -15,6 +15,7 @@ const poolOptions = config.database.url
         user: config.database.user,
         password: config.database.password,
         database: config.database.name,
+        ssl: config.database.ssl ? { rejectUnauthorized: true } : false,
         max: config.database.poolMax,
         idleTimeoutMillis: 30000,
         connectionTimeoutMillis: 2000,
