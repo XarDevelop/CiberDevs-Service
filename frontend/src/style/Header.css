@@ -25,6 +25,12 @@
             letter-spacing: -0.02em;
         }
 
+        .logo img {
+            height: 40px;
+            width: auto;
+            display: block;
+        }
+
         .logo span {
             color: var(--color-blue);
         }

@@ -1,4 +1,5 @@
 import '../style/Footer.css'
+import logo from '../assets/logo.jpeg'
 
 export default function Footer() {
   return (
@@ -7,7 +8,7 @@ export default function Footer() {
         <div className="container">
             <div className="footer-grid">
                 <div className="footer-brand">
-                    <a href="/" className="logo">Ciber<span>Dev</span></a>
+                    <a href="/" className="logo"><img src={logo} alt="CiberDev" /></a>
                     <p>Transformamos negocios con soluciones web de alto impacto. Desarrollo profesional, despliegue digital estratégico y crecimiento compartido.</p>
                 </div>
                 <div className="footer-col">

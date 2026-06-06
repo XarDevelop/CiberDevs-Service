@@ -17,6 +17,12 @@
             display: inline-block;
         }
 
+        .footer-brand .logo img {
+            height: 40px;
+            width: auto;
+            display: block;
+        }
+
         .footer-brand p {
             font-size: 0.875rem;
             line-height: 1.7;
