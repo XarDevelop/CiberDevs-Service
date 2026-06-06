@@ -3,6 +3,7 @@ import '../style/Servicios.css'
 import FormularioDeServicio from './FormularioDeServicio';
 
 export default function Servicios() {
+    const[Personalizado, setPersonalizado]=useState<boolean>(false);
     const[Basico,setBasico]=useState<boolean>(false);
     const[Pro,setPro]=useState<boolean>(false);
     const[Premium,setPremium]=useState<boolean>(false);
@@ -19,6 +20,23 @@ export default function Servicios() {
             <div className="pricing-grid">
                 
                 <div className="pricing-card">
+                    <span className="pricing-badge">Personalizado</span>
+                    <h3 className="pricing-name">Plan a Medida</h3>
+                    <div className="pricing-price">A convenir<span></span></div>
+                    <p className="pricing-description">Acuerdo flexible dependiendo de la dificultad del servicio solicitado.</p>
+                    <ul className="features-list">
+                        <li className="feature-item">Presupuesto personalizado sin compromiso</li>
+                        <li className="feature-item">Soluciones a medida de tu negocio</li>
+                        <li className="feature-item">Consultoría inicial gratuita</li>
+                        <li className="feature-item">Tecnologías adaptadas a tu proyecto</li>
+                        <li className="feature-item">Sin límite de páginas ni funcionalidades</li>
+                        <li className="feature-item">Soporte post-entrega personalizado</li>
+                    </ul>
+                    <button className="btn btn-outline" onClick={()=>{setPersonalizado(!Personalizado);setBasico(false);setPro(false);setPremium(false)}} aria-expanded={Personalizado} aria-controls="form-personalizado">Seleccionar Plan</button>
+                    {Personalizado && <div id="form-personalizado"><FormularioDeServicio tipo={'Personalizado'}></FormularioDeServicio></div>}
+                </div>
+
+                <div className="pricing-card">
                     <span className="pricing-badge">Básico</span>
                     <h3 className="pricing-name">Web Esencial</h3>
                     <div className="pricing-price">$300<span>USD</span></div>
@@ -31,7 +49,7 @@ export default function Servicios() {
                         <li className="feature-item">Hosting y dominio (1 año)</li>
                         <li className="feature-item">Soporte técnico 30 días</li>
                     </ul>
-                    <button className="btn btn-outline" onClick={()=>{setBasico(!Basico);setPro(false);setPremium(false)}} aria-expanded={Basico} aria-controls="form-basico">Seleccionar Plan</button>
+                    <button className="btn btn-outline" onClick={()=>{setPersonalizado(false);setBasico(!Basico);setPro(false);setPremium(false)}} aria-expanded={Basico} aria-controls="form-basico">Seleccionar Plan</button>
                     {Basico && <div id="form-basico"><FormularioDeServicio tipo={'Basico'}></FormularioDeServicio></div>}
                 </div>
 
@@ -50,7 +68,7 @@ export default function Servicios() {
                         <li className="feature-item">Reportes de analytics</li>
                         <li className="feature-item">Soporte técnico 60 días</li>
                     </ul>
-                    <button className="btn btn-white" onClick={()=>{setBasico(false);setPro(!Pro);setPremium(false)}} aria-expanded={Pro} aria-controls="form-pro">Seleccionar Plan</button>
+                    <button className="btn btn-white" onClick={()=>{setPersonalizado(false);setBasico(false);setPro(!Pro);setPremium(false)}} aria-expanded={Pro} aria-controls="form-pro">Seleccionar Plan</button>
                 </div>
                 {Pro && <div id="form-pro"><FormularioDeServicio tipo={'Pro'}></FormularioDeServicio></div>}
                 </div>
@@ -72,7 +90,7 @@ export default function Servicios() {
                     <p className='p-span'>
                         <strong>Nota:</strong> El cliente paga un 5% de sus ganancias mensuales como royalty por la inversión compartida.
                     </p>
-                    <button className="btn btn-outline" onClick={()=>{setBasico(false);setPro(false);setPremium(!Premium)}} aria-expanded={Premium} aria-controls="form-premium">Seleccionar Plan</button>
+                    <button className="btn btn-outline" onClick={()=>{setPersonalizado(false);setBasico(false);setPro(false);setPremium(!Premium)}} aria-expanded={Premium} aria-controls="form-premium">Seleccionar Plan</button>
                     {Premium && <div id="form-premium"><FormularioDeServicio tipo={'Premium'}></FormularioDeServicio></div>}
                 </div>
             </div>
