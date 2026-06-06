@@ -25,7 +25,7 @@ export const config = {
     },
 
     jwt: {
-        secret: process.env.JWT_SECRET || requiredEnv('JWT_SECRET'),
+        secret: requiredEnv('JWT_SECRET'),
         expiresIn: process.env.JWT_EXPIRES_IN || '1h',
     },
 

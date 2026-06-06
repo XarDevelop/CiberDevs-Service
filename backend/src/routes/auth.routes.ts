@@ -12,5 +12,5 @@ const authService = new AuthService(authRepo);
 const authHandler = new AuthHandler(authService);
 
 authRouter.post('/login', authLimiter, authHandler.login);
-authRouter.post('/logout', authHandler.logout);
+authRouter.post('/logout', authLimiter, authHandler.logout);
 authRouter.get('/dashboard', authMiddleware, authHandler.checkSession);

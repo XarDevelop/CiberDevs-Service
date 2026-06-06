@@ -1,6 +1,5 @@
-import { z, ZodObject } from 'zod';
+import { z } from 'zod';
 import { type Request, type Response, type NextFunction } from 'express';
-import type { AnyZodObject } from 'zod/v3';
 
 /**
  * Middleware genérico que valida los datos contra un esquema Zod.

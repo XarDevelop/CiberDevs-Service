@@ -24,7 +24,8 @@ export class AuthHandler {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
                 sameSite: 'strict',
-                maxAge: 3600000
+                maxAge: 3600000,
+                path: '/api/admin/auth'
             });
 
             res.status(200).json({ message: 'Login successful' });
@@ -43,6 +44,7 @@ export class AuthHandler {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'strict',
+            path: '/api/admin/auth'
         });
         res.status(200).json({ message: 'Logout successful' });
     };

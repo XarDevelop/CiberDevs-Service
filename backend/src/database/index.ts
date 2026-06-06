@@ -24,7 +24,7 @@ const poolOptions = config.database.url
 export const pool = new Pool(poolOptions);
 
 pool.on('error', (err) => {
-    console.error('Unexpected error on idle database client', err);
+    if (!config.isProduction) console.error('Unexpected error on idle database client', err);
 });
 
 export const connectDB = async () => {
@@ -33,7 +33,7 @@ export const connectDB = async () => {
         console.log('Database connected successfully');
         client.release();
     } catch (error) {
-        console.error('Error connecting to database:', error);
+        if (!config.isProduction) console.error('Error connecting to database:', error);
         process.exit(1);
     }
 };

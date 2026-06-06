@@ -6,5 +6,5 @@ export const generateToken = (payload: object): string => {
 };
 
 export const verifyToken = (token: string): jwt.JwtPayload | string => {
-    return jwt.verify(token, config.jwt.secret);
+    return jwt.verify(token, config.jwt.secret, { algorithms: ['HS256'] });
 };

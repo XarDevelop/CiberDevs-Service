@@ -1,14 +1,17 @@
 import { type Request, type Response, type NextFunction } from 'express';
 import { verifyToken } from '../utils/jwt.util.js';
 
+interface JwtPayload {
+    role: string;
+}
+
 export interface AuthRequest extends Request {
-    user?: any;
+    user?: JwtPayload;
 }
 
 export const authMiddleware = (req: AuthRequest, res: Response, next: NextFunction): void => {
     let token = req.cookies?.token;
 
-    // Fallback: Si no está en las cookies, verificamos el header Authorization
     if (!token) {
         const authHeader = req.headers.authorization;
         if (authHeader && authHeader.startsWith('Bearer ')) {
@@ -17,15 +20,15 @@ export const authMiddleware = (req: AuthRequest, res: Response, next: NextFuncti
     }
 
     if (!token) {
-        res.status(401).json({ error: 'Unauthorized: Missing token' });
+        res.status(401).json({ success: false, message: 'No autorizado' });
         return;
     }
 
     try {
-        const decoded = verifyToken(token);
+        const decoded = verifyToken(token) as JwtPayload;
         req.user = decoded;
         next();
-    } catch (error) {
-        res.status(401).json({ error: 'Unauthorized: Expired or invalid token' });
+    } catch {
+        res.status(401).json({ success: false, message: 'No autorizado' });
     }
 };
