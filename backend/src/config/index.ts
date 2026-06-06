@@ -1,5 +1,13 @@
 import 'dotenv/config';
 
+function requiredEnv(name: string): string {
+    const value = process.env[name];
+    if (!value) {
+        throw new Error(`Missing required environment variable: ${name}`);
+    }
+    return value;
+}
+
 export const config = {
     port: parseInt(process.env.PORT || '3000', 10),
     nodeEnv: process.env.NODE_ENV || 'development',
@@ -17,15 +25,15 @@ export const config = {
     },
 
     jwt: {
-        secret: process.env.JWT_SECRET || '',
+        secret: requiredEnv('JWT_SECRET'),
         expiresIn: process.env.JWT_EXPIRES_IN || '1h',
     },
 
     admin: {
-        passwordHash: process.env.ADMIN_PASSWORD_HASH || '',
+        passwordHash: requiredEnv('ADMIN_PASSWORD_HASH'),
     },
 
     cors: {
-        origin: process.env.CORS_ORIGIN || '*',
+        origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
     },
 };
