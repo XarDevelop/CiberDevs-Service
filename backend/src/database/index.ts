@@ -1,25 +1,13 @@
 import { Pool } from 'pg';
 import { config } from '../config/index.js';
 
-const poolOptions = config.database.url
-    ? {
-        connectionString: config.database.url,
-        ssl: config.database.ssl ? { rejectUnauthorized: true } : false,
-        max: config.database.poolMax,
-        idleTimeoutMillis: 30000,
-        connectionTimeoutMillis: 2000,
-    }
-    : {
-        host: config.database.host,
-        port: config.database.port,
-        user: config.database.user,
-        password: config.database.password,
-        database: config.database.name,
-        ssl: config.database.ssl ? { rejectUnauthorized: true } : false,
-        max: config.database.poolMax,
-        idleTimeoutMillis: 30000,
-        connectionTimeoutMillis: 2000,
-    };
+const poolOptions = {
+    connectionString: config.database.url,
+    ssl: config.database.ssl ? { rejectUnauthorized: true } : false,
+    max: config.database.poolMax,
+    idleTimeoutMillis: 30000,
+    connectionTimeoutMillis: 2000,
+};
 
 export const pool = new Pool(poolOptions);
 
