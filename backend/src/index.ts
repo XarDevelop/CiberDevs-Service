@@ -2,35 +2,13 @@ import 'dotenv/config';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import express from 'express';
-import helmet from 'helmet';
-import cors from 'cors';
-import compression from 'compression';
-import morgan from 'morgan';
-import cookieParser from 'cookie-parser';
 import { config } from './config/index.js';
 import { connectDB, disconnectDB } from './database/index.js';
 import { runMigrations } from './database/runMigrations.js';
-import indexRoutes from './routes/index.js';
-import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
+import app from './app.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-const app = express();
-
-app.use(helmet({ contentSecurityPolicy: false }));
-app.use(cors({ origin: config.cors.origin, credentials: true }));
-app.use(compression());
-app.use(morgan(config.isProduction ? 'combined' : 'dev'));
-app.use(express.json({ limit: '1mb' }));
-app.use(express.urlencoded({ extended: true, limit: '1mb' }));
-app.use(cookieParser());
-
-app.get('/api/health', (_req, res) => {
-    res.json({ success: true, status: 'ok', timestamp: new Date().toISOString() });
-});
-
-app.use('/api', indexRoutes);
 
 if (config.isProduction) {
     const frontendDist = path.resolve(__dirname, '..', '..', '..', 'frontend', 'dist');
@@ -40,9 +18,6 @@ if (config.isProduction) {
         res.sendFile(path.join(frontendDist, 'index.html'));
     });
 }
-
-app.use(notFoundHandler);
-app.use(errorHandler);
 
 const start = async () => {
     await connectDB();
