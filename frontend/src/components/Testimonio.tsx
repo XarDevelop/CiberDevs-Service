@@ -48,17 +48,18 @@ export default function Testimonio() {
     const [cantidadEstrellas, setCantidadEstrellas] = useState<number | null>(5);
     const [estanRellenas, setEstanRellenas] = useState<boolean>(true);
 
-    useEffect(() => {
-        const TraerTestimonios = async () => {
-            try {
-                const response = await axios.get<RespuestaTestimonio>('/api/reviews');
-                const data = response.data.data;
-                setListaTestimonios(data);
-                setHayTestimonios(response.data.success);
-            } catch (error) {
-                console.log(error)
-            }
+    const TraerTestimonios = async () => {
+        try {
+            const response = await axios.get<RespuestaTestimonio>('/api/reviews');
+            const data = response.data.data;
+            setListaTestimonios(data);
+            setHayTestimonios(response.data.success);
+        } catch (error) {
+            console.log(error)
         }
+    }
+
+    useEffect(() => {
         TraerTestimonios();
     }, [])
 
@@ -87,13 +88,13 @@ export default function Testimonio() {
             const data = response.data.message;
             console.log(data);
             
-            // Reset form y cerrar
             setNombre('');
             setComentario('');
             setRol('');
             setCantidadEstrellas(5);
             setMostrarForm(false);
             setEstanRellenas(true);
+            TraerTestimonios();
         } catch (error) {
             console.log(error)
         }

@@ -42,7 +42,7 @@ const Login = () => {
       try {
         // Intenta acceder a un endpoint protegido
         // Si la cookie JWT es válida, redirige automáticamente
-        await axios.get('/api/admin/dashboard', { withCredentials: true });
+        await axios.get('/api/admin/auth/dashboard', { withCredentials: true });
         
         // Si llega aquí, el token es válido → redirigir al panel
         window.location.href = REDIRECT_URL;

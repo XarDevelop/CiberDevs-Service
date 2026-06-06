@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import Box from '@mui/material/Box';
-import { inputBaseClasses } from '@mui/material/InputBase';
 import TextField from '@mui/material/TextField';
-import InputAdornment from '@mui/material/InputAdornment';
 import Button from '@mui/material/Button';
 import axios from 'axios';
 
@@ -150,6 +148,7 @@ export default function FormularioDeServicio({ tipo }: Propiedades) {
         sx={{ '& > :not(style)': { m: 1, width: '100%' } }}
         noValidate
         autoComplete="off"
+        onSubmit={(e) => { e.preventDefault(); ProcessPedidoWhatsApp(); }}
       >
         <h2 style={{ marginBottom: '10px', color: '#0f1a3d' }}>
           Solicitud de Servicio: {tipo}

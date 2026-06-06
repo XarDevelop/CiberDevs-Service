@@ -106,6 +106,7 @@ const PanelAdministracion: React.FC = () => {
     });
 
     if (response.status === 401) {
+      window.location.href = '/LoginPanelAdministracion2026';
       throw new Error('Sesión expirada. Por favor inicia sesión nuevamente.');
     }
 
