@@ -15,7 +15,7 @@ interface InfoTestimonio{
 export default function TestimonioGrid({props}:InfoTestimonio) {
     const CantidadEstrellas=()=>{
         let estrellas:string='';
-        for(let i:number=0;i<=props.rating;i++){
+        for(let i:number=0;i<props.rating;i++){
             estrellas=estrellas+"⭐"
         }
         return estrellas;
