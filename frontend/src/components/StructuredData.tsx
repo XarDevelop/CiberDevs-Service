@@ -4,8 +4,8 @@ const schema = {
   '@context': 'https://schema.org',
   '@type': 'LocalBusiness',
   name: 'CiberDev',
-  description: 'Desarrollo web profesional y presencia digital para negocios.',
-  url: 'https://ciberdev.com/',
+  description: 'Desarrollo web profesional y presencia digital para negocios en La Habana, Cuba.',
+  url: 'https://ciberdevs.vercel.app/',
   telephone: '+53-51366196',
   email: 'francislopez0507@gmail.com',
   address: {
@@ -14,6 +14,8 @@ const schema = {
     addressCountry: 'CU',
   },
   sameAs: ['https://wa.me/5351366196'],
+  priceRange: '$300 - $1300',
+  areaServed: 'CU',
 };
 
 export default function StructuredData() {

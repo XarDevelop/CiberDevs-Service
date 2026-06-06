@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://ciberdevs.vercel.app/sitemap.xml
