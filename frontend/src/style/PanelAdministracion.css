@@ -11,6 +11,48 @@
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
+/* ===== Header y Cerrar Sesión ===== */
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 32px;
+  background-color: #1e293b;
+  border-bottom: 1px solid #334155;
+}
+
+.panel-logo {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #e2e8f0;
+  margin: 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.btn-logout {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 20px;
+  border: 1px solid #475569;
+  border-radius: 8px;
+  background: transparent;
+  color: #cbd5e1;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-logout:hover {
+  background-color: #334155;
+  border-color: #ef4444;
+  color: #fca5a5;
+}
+
 /* ===== Notificaciones ===== */
 .notification {
   position: fixed;
