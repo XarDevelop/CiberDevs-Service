@@ -1,18 +1,20 @@
 import { Pool } from 'pg';
 import { config } from '../config/index.js';
 
+const connectionString = config.database.url.replace('sslmode=require', 'sslmode=no-verify');
+
 const poolOptions = {
-    connectionString: config.database.url,
-    ssl: config.database.ssl ? { rejectUnauthorized: false } : false,
+    connectionString,
+    ssl: { rejectUnauthorized: false },
     max: config.database.poolMax,
     idleTimeoutMillis: 30000,
-    connectionTimeoutMillis: 2000,
+    connectionTimeoutMillis: 10000,
 };
 
 export const pool = new Pool(poolOptions);
 
 pool.on('error', (err) => {
-    if (!config.isProduction) console.error('Unexpected error on idle database client', err);
+    console.error('Unexpected error on idle database client', err);
 });
 
 export const connectDB = async () => {
@@ -21,8 +23,7 @@ export const connectDB = async () => {
         console.log('Database connected successfully');
         client.release();
     } catch (error) {
-        if (!config.isProduction) console.error('Error connecting to database:', error);
-        process.exit(1);
+        console.error('Error connecting to database:', error);
     }
 };
 
