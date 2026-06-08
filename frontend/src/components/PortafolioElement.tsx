@@ -16,10 +16,21 @@ interface Props {
 }
 
 export default function PortafolioElement({ props }: Props) {
+    const getFavicon = (url: string) => {
+        try {
+            const host = new URL(url).hostname;
+            return `https://www.google.com/s2/favicons?domain=${host}&sz=128`;
+        } catch {
+            return null;
+        }
+    };
+
+    const imageSrc = props.image_url || (props.project_url ? getFavicon(props.project_url) : null);
+
     const content = (
         <div className="portfolio-item">
-            {props.image_url ? (
-                <img src={props.image_url} alt={props.title} className="portfolio-image" loading="lazy" />
+            {imageSrc ? (
+                <img src={imageSrc} alt={props.title} className="portfolio-image" loading="lazy" />
             ) : (
                 <div className="portfolio-placeholder">
                     <div className="portfolio-placeholder-icon">{props.icon}</div>
