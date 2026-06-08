@@ -492,6 +492,17 @@
 }
 
 /* ===== Responsive ===== */
+.input-error {
+  border-color: #ef4444 !important;
+}
+
+.field-error {
+  display: block;
+  color: #fca5a5;
+  font-size: 0.75rem;
+  margin-top: 4px;
+}
+
 @media (max-width: 768px) {
   .tab-container {
     padding: 16px 16px 0;

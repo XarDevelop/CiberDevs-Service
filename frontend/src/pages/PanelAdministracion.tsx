@@ -184,7 +184,7 @@ const PanelAdministracion: React.FC = () => {
       if (editingProyecto) {
         const response = await apiRequest<Proyecto>(`/portfolio/${editingProyecto.id}`, {
           method: 'PUT',
-          body: JSON.stringify(proyectoData),
+          body: JSON.stringify(clean),
         });
         if (response.success) {
           setProyectos(prev =>
@@ -195,7 +195,7 @@ const PanelAdministracion: React.FC = () => {
       } else {
         const response = await apiRequest<Proyecto>('/portfolio', {
           method: 'POST',
-          body: JSON.stringify(proyectoData),
+          body: JSON.stringify(clean),
         });
         if (response.success) {
           setProyectos(prev => [response.data, ...prev]);
@@ -576,12 +576,23 @@ const ProyectoModal: React.FC<ProyectoModalProps> = ({ proyecto, onClose, onSave
     title: proyecto?.title || '',
     description: proyecto?.description || '',
     icon: proyecto?.icon || '🌐',
-    image_url: proyecto?.image_url || '',
     project_url: proyecto?.project_url || '',
   });
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const validate = (): boolean => {
+    const e: Record<string, string> = {};
+    if (!formData.title || formData.title.trim().length < 3) e.title = 'Mínimo 3 caracteres';
+    if (!formData.description || formData.description.trim().length < 10) e.description = 'Mínimo 10 caracteres';
+    if (!formData.icon || !formData.icon.trim()) e.icon = 'El icono es obligatorio';
+    if (!formData.project_url || !/^https?:\/\/.+/.test(formData.project_url)) e.project_url = 'Debe ser una URL válida (https://...)';
+    setErrors(e);
+    return Object.keys(e).length === 0;
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!validate()) return;
     onSave(formData);
   };
 
@@ -601,20 +612,22 @@ const ProyectoModal: React.FC<ProyectoModalProps> = ({ proyecto, onClose, onSave
             <input
               type="text"
               value={formData.title}
-              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-              className="form-input"
+              onChange={(e) => { setFormData({ ...formData, title: e.target.value }); if (errors.title) setErrors({ ...errors, title: '' }); }}
+              className={`form-input ${errors.title ? 'input-error' : ''}`}
               required
             />
+            {errors.title && <span className="field-error">{errors.title}</span>}
           </div>
 
           <div className="form-group">
             <label className="form-label">Descripción *</label>
             <textarea
               value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              className="form-input form-textarea"
+              onChange={(e) => { setFormData({ ...formData, description: e.target.value }); if (errors.description) setErrors({ ...errors, description: '' }); }}
+              className={`form-input form-textarea ${errors.description ? 'input-error' : ''}`}
               required
             />
+            {errors.description && <span className="field-error">{errors.description}</span>}
           </div>
 
           <div className="form-group">
@@ -622,22 +635,12 @@ const ProyectoModal: React.FC<ProyectoModalProps> = ({ proyecto, onClose, onSave
             <input
               type="text"
               value={formData.icon}
-              onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
-              className="form-input"
+              onChange={(e) => { setFormData({ ...formData, icon: e.target.value }); if (errors.icon) setErrors({ ...errors, icon: '' }); }}
+              className={`form-input ${errors.icon ? 'input-error' : ''}`}
               placeholder="Ej: 🌐"
               required
             />
-          </div>
-
-          <div className="form-group">
-            <label className="form-label">URL de imagen</label>
-            <input
-              type="url"
-              value={formData.image_url}
-              onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-              className="form-input"
-              placeholder="https://ejemplo.com/imagen.jpg"
-            />
+            {errors.icon && <span className="field-error">{errors.icon}</span>}
           </div>
 
           <div className="form-group">
@@ -645,11 +648,12 @@ const ProyectoModal: React.FC<ProyectoModalProps> = ({ proyecto, onClose, onSave
             <input
               type="url"
               value={formData.project_url}
-              onChange={(e) => setFormData({ ...formData, project_url: e.target.value })}
-              className="form-input"
+              onChange={(e) => { setFormData({ ...formData, project_url: e.target.value }); if (errors.project_url) setErrors({ ...errors, project_url: '' }); }}
+              className={`form-input ${errors.project_url ? 'input-error' : ''}`}
               placeholder="https://midominio.com"
               required
             />
+            {errors.project_url && <span className="field-error">{errors.project_url}</span>}
           </div>
 
           <div className="modal-actions">
