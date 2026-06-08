@@ -22,7 +22,7 @@ app.use(helmet({
     contentSecurityPolicy: false,
     crossOriginResourcePolicy: { policy: 'cross-origin' },
 }));
-app.options('*', (_, res) => res.sendStatus(204));
+
 app.use(compression());
 app.use(morgan(config.isProduction ? 'combined' : 'dev'));
 app.use(express.json({ limit: '1mb' }));
