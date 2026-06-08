@@ -77,12 +77,21 @@ app.get('/api/diagnostics', async (_req, res) => {
     }
 
     try {
-        const columnResult = await pool.query(
+        const reviewCols = await pool.query(
             "SELECT column_name, data_type FROM information_schema.columns WHERE table_name = 'reviews' ORDER BY ordinal_position"
         );
-        results.reviewsColumns = columnResult.rows;
+        results.reviewsColumns = reviewCols.rows;
     } catch (e: any) {
         results.reviewsColumns = { error: e.message, code: e.code };
+    }
+
+    try {
+        const orderCols = await pool.query(
+            "SELECT column_name, data_type FROM information_schema.columns WHERE table_name = 'orders' ORDER BY ordinal_position"
+        );
+        results.ordersColumns = orderCols.rows;
+    } catch (e: any) {
+        results.ordersColumns = { error: e.message, code: e.code };
     }
 
     res.json({ success: true, diagnostics: results });
