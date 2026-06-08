@@ -3,6 +3,14 @@ import { type IAuthService } from '../services/auth.service.interface.js';
 import { AppError } from '../../middleware/errorHandler.js';
 import { config } from '../../config/index.js';
 
+const cookieOptions = {
+    httpOnly: true,
+    secure: config.isProduction,
+    sameSite: 'lax' as const,
+    maxAge: 3600000,
+    path: '/',
+};
+
 export class AuthHandler {
     constructor(private readonly authService: IAuthService) {}
 
@@ -21,13 +29,7 @@ export class AuthHandler {
                 return;
             }
 
-            res.cookie('token', token, {
-                httpOnly: true,
-                secure: config.isProduction,
-                sameSite: 'strict',
-                maxAge: 3600000,
-                path: '/api'
-            });
+            res.cookie('token', token, cookieOptions);
 
             res.status(200).json({ success: true, message: 'Login successful' });
         } catch (error: unknown) {
@@ -43,12 +45,9 @@ export class AuthHandler {
     };
 
     logout = async (_req: Request, res: Response): Promise<void> => {
-        res.clearCookie('token', {
-            httpOnly: true,
-            secure: config.isProduction,
-            sameSite: 'strict',
-            path: '/api'
-        });
+        res.clearCookie('token', cookieOptions);
+        res.clearCookie('token', { ...cookieOptions, path: '/api' });
+        res.clearCookie('token', { ...cookieOptions, path: '/api/admin/auth' });
         res.status(200).json({ success: true, message: 'Logout successful' });
     };
 
