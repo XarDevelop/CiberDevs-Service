@@ -176,6 +176,11 @@ const PanelAdministracion: React.FC = () => {
 
   const saveProyecto = async (proyectoData: Partial<Proyecto>) => {
     try {
+      const clean = {
+        ...proyectoData,
+        image_url: proyectoData.image_url?.trim() || null,
+        project_url: proyectoData.project_url?.trim() || null,
+      };
       if (editingProyecto) {
         const response = await apiRequest<Proyecto>(`/portfolio/${editingProyecto.id}`, {
           method: 'PUT',

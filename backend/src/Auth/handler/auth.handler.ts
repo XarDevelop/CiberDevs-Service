@@ -26,7 +26,7 @@ export class AuthHandler {
                 secure: config.isProduction,
                 sameSite: 'strict',
                 maxAge: 3600000,
-                path: '/api/admin/auth'
+                path: '/api'
             });
 
             res.status(200).json({ success: true, message: 'Login successful' });
@@ -47,7 +47,7 @@ export class AuthHandler {
             httpOnly: true,
             secure: config.isProduction,
             sameSite: 'strict',
-            path: '/api/admin/auth'
+            path: '/api'
         });
         res.status(200).json({ success: true, message: 'Logout successful' });
     };
