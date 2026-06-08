@@ -1,38 +1,34 @@
 import '../style/Testimonio.css'
 
-interface InfoTestimonio{
+interface InfoTestimonio {
     id: number,
-    author_name: string,
-    author_role: string,
+    name: string,
+    role: string,
     avatar_url: string,
     content: string,
-    rating: number,
+    stars: number,
     is_active: boolean,
     created_at: string
 }
 
-export default function TestimonioGrid({props}:InfoTestimonio) {
-    const CantidadEstrellas=()=>{
-        let estrellas:string='';
-        for(let i:number=0;i<props.rating;i++){
-            estrellas=estrellas+"⭐"
-        }
-        return estrellas;
-    }
-    const VerRating:string=CantidadEstrellas();
+export default function TestimonioGrid({ props }: { props: InfoTestimonio }) {
+    const estrellas = '⭐'.repeat(props.stars);
 
-  return (
-    <div className="testimonial-card">
-                        <div className="testimonial-stars">
-                            <span>{VerRating}</span>
-                        </div>
-                        <p className="testimonial-text">"{props.content}"</p>
-                        <div className="testimonial-author">
-                            <div className="testimonial-info">
-                                <h4>{props.author_name}</h4>
-                                <p>{props.author_role}</p>
-                            </div>
-                        </div>
-                    </div>
-  )
+    return (
+        <div className="testimonial-card">
+            <div className="testimonial-stars">
+                <span>{estrellas}</span>
+            </div>
+            <p className="testimonial-text">"{props.content}"</p>
+            <div className="testimonial-author">
+                <div className="testimonial-avatar">
+                    {props.name.charAt(0).toUpperCase()}
+                </div>
+                <div className="testimonial-info">
+                    <h4>{props.name}</h4>
+                    <p>{props.role}</p>
+                </div>
+            </div>
+        </div>
+    )
 }

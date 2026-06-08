@@ -14,11 +14,11 @@ import AddIcon from '@mui/icons-material/Add';
 
 interface InfoTestimonio {
     id: number,
-    author_name: string,
-    author_role: string,
+    name: string,
+    role: string,
     avatar_url: string,
     content: string,
-    rating: number,
+    stars: number,
     is_active: boolean,
     created_at: string
 }

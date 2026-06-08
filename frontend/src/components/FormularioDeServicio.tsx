@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import Alert from '@mui/material/Alert';
 import axios from 'axios';
 
 interface Propiedades {
@@ -16,8 +17,15 @@ interface Pedido {
   telefono: string;
 }
 
+interface FieldErrors {
+  name: string;
+  telefono: string;
+  comentario: string;
+  tipo_pedido: string;
+  tipo_pago: string;
+}
+
 export default function FormularioDeServicio({ tipo }: Propiedades) {
-  // ─── Estados del formulario ─────────────────────────────────────────
   const [nombre, setNombre] = useState<string>('');
   const [telefono, setTelefono] = useState<string>('');
   const [comentario, setComentario] = useState<string>('');
@@ -25,23 +33,53 @@ export default function FormularioDeServicio({ tipo }: Propiedades) {
   const [asuntoGmail, setAsuntoGmail] = useState<string>('');
   const [correoDestino, setCorreoDestino] = useState<string>('');
 
-  // ─── Estado de validación ───────────────────────────────────────────
-  const [estanRellenas, setEstanRellenas] = useState<boolean | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({
+    name: '', telefono: '', comentario: '', tipo_pedido: '', tipo_pago: ''
+  });
   const [errorMsg, setErrorMsg] = useState<string>('');
+  const [submitting, setSubmitting] = useState<boolean>(false);
 
-  // ─── Validación de campos ──────────────────────────────────────────
-  const validarCampos = (): boolean => {
-    if (nombre.trim() === '' || comentario.trim() === '' || telefono.trim() === '') {
-      setEstanRellenas(false);
-      setErrorMsg('Por favor rellene correctamente el formulario (nombre, teléfono y comentario son obligatorios)');
-      return false;
-    }
-    setEstanRellenas(true);
+  const resetErrors = () => {
+    setFieldErrors({ name: '', telefono: '', comentario: '', tipo_pedido: '', tipo_pago: '' });
     setErrorMsg('');
-    return true;
   };
 
-  // ─── Enviar pedido al backend ──────────────────────────────────────
+  const extractFieldErrors = (errors: Array<{ path: string; message: string }>) => {
+    const mapped: FieldErrors = { name: '', telefono: '', comentario: '', tipo_pedido: '', tipo_pago: '' };
+    for (const err of errors) {
+      const field = err.path.replace(/^body\./, '');
+      if (field === 'name') mapped.name = err.message;
+      else if (field === 'telefono') mapped.telefono = err.message;
+      else if (field === 'coment') mapped.comentario = err.message;
+      else if (field === 'tipo_pedido') mapped.tipo_pedido = err.message;
+      else if (field === 'tipo_pago') mapped.tipo_pago = err.message;
+    }
+    return mapped;
+  };
+
+  const validarCampos = (): boolean => {
+    resetErrors();
+    let valid = true;
+    const errors = { name: '', telefono: '', comentario: '', tipo_pedido: '', tipo_pago: '' };
+
+    if (nombre.trim().length < 3) {
+      errors.name = 'El nombre debe tener al menos 3 caracteres';
+      valid = false;
+    }
+    if (telefono.trim().length < 5) {
+      errors.telefono = 'El teléfono debe tener al menos 5 dígitos';
+      valid = false;
+    }
+    if (comentario.trim().length < 10) {
+      errors.comentario = 'El comentario debe tener al menos 10 caracteres';
+      valid = false;
+    }
+
+    setFieldErrors(errors);
+    if (!valid) setErrorMsg('Por favor corrige los campos marcados en rojo');
+    return valid;
+  };
+
   const enviarPedidoBackend = async (): Promise<boolean> => {
     const pedido: Pedido = {
       name: nombre,
@@ -54,16 +92,24 @@ export default function FormularioDeServicio({ tipo }: Propiedades) {
     try {
       await axios.post('/api/orders', pedido);
       return true;
-    } catch {
-      setErrorMsg('Error al registrar el pedido. Intenta de nuevo.');
-      setEstanRellenas(false);
+    } catch (err: any) {
+      if (err.response?.status === 400) {
+        const data = err.response.data;
+        if (data.errors) {
+          const fieldErrs = extractFieldErrors(data.errors);
+          setFieldErrors(fieldErrs);
+          setErrorMsg(data.message || 'Datos inválidos. Revisa los campos marcados.');
+        } else {
+          setErrorMsg(data.message || 'Datos de entrada inválidos');
+        }
+      } else if (err.response?.status === 429) {
+        setErrorMsg('Has hecho demasiadas solicitudes. Espera unos minutos.');
+      } else {
+        setErrorMsg(err.response?.data?.message || 'Error al registrar el pedido. Intenta de nuevo.');
+      }
       return false;
     }
   };
-
-  // ═══════════════════════════════════════════════════════════════════
-  //  APARTADO WHATSAPP
-  // ═══════════════════════════════════════════════════════════════════
 
   const sendWhatsAppMessage = (): void => {
     const cleanNumber = telefono.replace(/\D/g, '');
@@ -79,20 +125,18 @@ export default function FormularioDeServicio({ tipo }: Propiedades) {
       `*Teléfono:* ${telefono}`;
 
     const encodedMessage = encodeURIComponent(message);
-    const whatsappUrl = `https://wa.me/${'+51366196'}?text=${encodedMessage}`;
+    const whatsappUrl = `https://wa.me/+51366196?text=${encodedMessage}`;
     window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
   };
 
   const ProcessPedidoWhatsApp = async (): Promise<void> => {
     if (!validarCampos()) return;
+    setSubmitting(true);
     const saved = await enviarPedidoBackend();
+    setSubmitting(false);
     if (!saved) return;
     sendWhatsAppMessage();
   };
-
-  // ═══════════════════════════════════════════════════════════════════
-  //  APARTADO GMAIL
-  // ═══════════════════════════════════════════════════════════════════
 
   const openGmailWebComposer = (
     toEmail: string,
@@ -117,13 +161,11 @@ export default function FormularioDeServicio({ tipo }: Propiedades) {
 
     if (!asuntoGmail.trim()) {
       setErrorMsg('Por favor escriba un asunto para el correo de Gmail');
-      setEstanRellenas(false);
       return;
     }
 
     if (!correoDestino.trim()) {
       setErrorMsg('Por favor ingrese un correo de destino');
-      setEstanRellenas(false);
       return;
     }
 
@@ -134,19 +176,16 @@ export default function FormularioDeServicio({ tipo }: Propiedades) {
       `Teléfono de contacto: ${telefono}\n\n` +
       `Saludos.`;
 
+    setSubmitting(true);
     const saved = await enviarPedidoBackend();
+    setSubmitting(false);
     if (!saved) return;
     openGmailWebComposer(correoDestino, asuntoGmail, emailBody);
   };
 
-  // ═══════════════════════════════════════════════════════════════════
-  //  RENDER
-  // ═══════════════════════════════════════════════════════════════════
-
   return (
     <div style={{ maxWidth: '600px', margin: '0 auto', padding: '20px' }}>
       
-      {/* ═══════════════════════ DATOS COMUNES ═══════════════════════ */}
       <Box
         component="form"
         sx={{ '& > :not(style)': { m: 1, width: '100%' } }}
@@ -158,36 +197,38 @@ export default function FormularioDeServicio({ tipo }: Propiedades) {
           Solicitud de Servicio: {tipo}
         </h2>
 
-        {/* Nombre */}
         <TextField
-          onChange={(e) => setNombre(e.target.value)}
+          onChange={(e) => { setNombre(e.target.value); if (fieldErrors.name) setFieldErrors(f => ({...f, name: ''})); }}
           value={nombre}
           id="nombre"
           label="Nombre completo"
           variant="outlined"
           fullWidth
+          error={!!fieldErrors.name}
+          helperText={fieldErrors.name || 'Mínimo 3 caracteres'}
         />
 
-        {/* Teléfono */}
         <TextField
           onChange={(e) => {
             const soloNumeros = e.target.value.replace(/\D/g, '');
             setTelefono(soloNumeros);
+            if (fieldErrors.telefono) setFieldErrors(f => ({...f, telefono: ''}));
           }}
           value={telefono}
           id="telefono"
           label="Número de teléfono"
           variant="outlined"
+          fullWidth
+          error={!!fieldErrors.telefono}
+          helperText={fieldErrors.telefono || 'Mínimo 5 dígitos'}
           inputProps={{
             inputMode: 'numeric',
             pattern: '[0-9]*',
           }}
-          fullWidth
         />
 
-        {/* Comentario / Especificaciones */}
         <TextField
-          onChange={(e) => setComentario(e.target.value)}
+          onChange={(e) => { setComentario(e.target.value); if (fieldErrors.comentario) setFieldErrors(f => ({...f, comentario: ''})); }}
           value={comentario}
           id="comentario"
           label="Especificaciones de la página"
@@ -195,9 +236,10 @@ export default function FormularioDeServicio({ tipo }: Propiedades) {
           multiline
           rows={6}
           fullWidth
+          error={!!fieldErrors.comentario}
+          helperText={fieldErrors.comentario || 'Mínimo 10 caracteres'}
         />
 
-        {/* Forma de Pago */}
         <div style={{ margin: '10px 0' }}>
           <label style={{ fontWeight: 'bold', display: 'block', marginBottom: '5px' }}>
             Forma de Pago:
@@ -220,14 +262,12 @@ export default function FormularioDeServicio({ tipo }: Propiedades) {
         </div>
       </Box>
 
-      {/* Mensaje de error */}
-      {estanRellenas === false && (
-        <p className="alert-form" style={{ color: 'red', fontWeight: 'bold', textAlign: 'center' }}>
+      {errorMsg && (
+        <Alert severity="error" sx={{ mb: 2, mt: 1 }} onClose={() => setErrorMsg('')}>
           {errorMsg}
-        </p>
+        </Alert>
       )}
 
-      {/* ═══════════════════════ APARTADO WHATSAPP ═══════════════════════ */}
       <Box
         sx={{
           border: '2px solid #25D366',
@@ -247,17 +287,17 @@ export default function FormularioDeServicio({ tipo }: Propiedades) {
           variant="contained"
           size="large"
           onClick={ProcessPedidoWhatsApp}
+          disabled={submitting}
           sx={{
             backgroundColor: '#25D366',
             '&:hover': { backgroundColor: '#128C7E' },
             width: '100%',
           }}
         >
-          📱 Enviar Pedido por WhatsApp
+          {submitting ? 'Enviando...' : '📱 Enviar Pedido por WhatsApp'}
         </Button>
       </Box>
 
-      {/* ═══════════════════════ APARTADO GMAIL ═══════════════════════ */}
       <Box
         sx={{
           border: '2px solid #0f1a3d',
@@ -271,7 +311,6 @@ export default function FormularioDeServicio({ tipo }: Propiedades) {
           <span>✉️</span> Enviar por Gmail
         </h3>
 
-        {/* Correo destino */}
         <TextField
           onChange={(e) => setCorreoDestino(e.target.value)}
           value={correoDestino}
@@ -283,7 +322,6 @@ export default function FormularioDeServicio({ tipo }: Propiedades) {
           sx={{ mb: 2 }}
         />
 
-        {/* Asunto de Gmail */}
         <TextField
           onChange={(e) => setAsuntoGmail(e.target.value)}
           value={asuntoGmail}
@@ -302,13 +340,14 @@ export default function FormularioDeServicio({ tipo }: Propiedades) {
           variant="contained"
           size="large"
           onClick={ProcessPedidoGmail}
+          disabled={submitting}
           sx={{
             backgroundColor: '#0f1a3d',
             '&:hover': { backgroundColor: '#C5221F' },
             width: '100%',
           }}
         >
-          📧 Enviar Pedido por Gmail
+          {submitting ? 'Enviando...' : '📧 Enviar Pedido por Gmail'}
         </Button>
       </Box>
 
