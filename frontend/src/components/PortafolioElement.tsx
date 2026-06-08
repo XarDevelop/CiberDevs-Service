@@ -1,47 +1,52 @@
 import '../style/Portafolio.css'
 
- interface PortafolioProps{
+interface PortafolioProps {
     id: number,
     title: string,
     description: string,
     icon: string,
-    image_url:string | null,
+    image_url: string | null,
     project_url: string,
     is_active: boolean,
-    created_at:string
+    created_at: string
 }
 
-interface Props{
-  props:PortafolioProps
+interface Props {
+    props: PortafolioProps
 }
 
-export default function PortafolioElement({props}:Props) {
-  const content = (
-    <div className="portfolio-item">
-        <div className="portfolio-placeholder">
+export default function PortafolioElement({ props }: Props) {
+    const content = (
+        <div className="portfolio-item">
             {props.image_url ? (
-              <img src={props.image_url} alt={props.title} className="portfolio-image" loading="lazy" />
+                <img src={props.image_url} alt={props.title} className="portfolio-image" loading="lazy" />
             ) : (
-              <>
-                <div className="portfolio-placeholder-icon">{props.icon}</div>
-                <div className="portfolio-placeholder-text">{props.title}</div>
-              </>
+                <div className="portfolio-placeholder">
+                    <div className="portfolio-placeholder-icon">{props.icon}</div>
+                    <div className="portfolio-placeholder-text">{props.title}</div>
+                </div>
             )}
+            <div className="portfolio-overlay">
+                <span className="portfolio-tag">{props.icon} {props.title.split(' ')[0]}</span>
+                <h3>{props.title}</h3>
+                <p>{props.description}</p>
+                {props.project_url && (
+                    <span className="portfolio-link-tag">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                        Visitar
+                    </span>
+                )}
+            </div>
         </div>
-        <div className="portfolio-overlay">
-            <h3>{props.title}</h3>
-            <p>{props.description}</p>
-        </div>
-    </div>
-  );
-
-  if (props.project_url) {
-    return (
-      <a href={props.project_url} target="_blank" rel="noopener noreferrer" className="portfolio-link">
-        {content}
-      </a>
     );
-  }
 
-  return content;
+    if (props.project_url) {
+        return (
+            <a href={props.project_url} target="_blank" rel="noopener noreferrer" className="portfolio-link">
+                {content}
+            </a>
+        );
+    }
+
+    return content;
 }
