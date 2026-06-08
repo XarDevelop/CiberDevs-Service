@@ -1,5 +1,4 @@
 import { type Request, type Response, type NextFunction } from 'express';
-import { config } from '../config/index.js';
 
 export class AppError extends Error {
     public readonly statusCode: number;
@@ -30,7 +29,6 @@ export const errorHandler = (
     res.status(500).json({
         success: false,
         message: 'Error interno del servidor',
-        error: err.message,
     });
 };
 
