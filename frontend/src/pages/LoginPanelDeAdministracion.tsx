@@ -21,8 +21,7 @@ import {
 } from '@mui/icons-material';
 import axios from 'axios';
 
-// Configuración de axios para enviar cookies automáticamente
-axios.defaults.withCredentials = true;
+
 
 const API_URL = '/api/admin/auth/login';
 const REDIRECT_URL = '/LoginPanelPrincipal';

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { API_BASE } from '../api/config';
 import '../style/PanelAdministracion.css';
 
 // ============================================
@@ -36,12 +37,6 @@ interface ApiResponse<T> {
   message?: string;
   errors?: Array<{ path: string; message: string }>;
 }
-
-// ============================================
-// CONFIGURACIÓN
-// ============================================
-
-const API_BASE = '/api';
 
 // ============================================
 // COMPONENTE PRINCIPAL
