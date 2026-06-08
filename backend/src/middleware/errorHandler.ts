@@ -25,15 +25,11 @@ export const errorHandler = (
         return;
     }
 
-    if (!config.isProduction) {
-        console.error('Unhandled error:', err);
-    }
+    console.error('Unhandled error:', err.message, err.stack);
 
     res.status(500).json({
         success: false,
-        message: config.isProduction
-            ? 'Error interno del servidor'
-            : err.message,
+        message: 'Error interno del servidor',
     });
 };
 
