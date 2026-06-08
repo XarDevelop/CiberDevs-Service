@@ -29,6 +29,11 @@ app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 app.use(cookieParser());
 
+app.use((req, _res, next) => {
+    console.log(`[DEBUG] ${req.method} ${req.path} body:${JSON.stringify(req.body)}`);
+    next();
+});
+
 app.get('/api/health', (_req, res) => {
     res.json({ success: true, status: 'ok', timestamp: new Date().toISOString() });
 });
@@ -81,6 +86,17 @@ app.get('/api/diagnostics', async (_req, res) => {
     }
 
     res.json({ success: true, diagnostics: results });
+});
+
+app.post('/api/echo', (req, res) => {
+    res.json({
+        success: true,
+        method: req.method,
+        path: req.path,
+        hasBody: !!req.body,
+        body: req.body,
+        contentType: req.get('Content-Type'),
+    });
 });
 
 app.use('/api', indexRoutes);
