@@ -8,6 +8,7 @@ import cookieParser from 'cookie-parser';
 import { config } from './config/index.js';
 import indexRoutes from './routes/index.js';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
+import { pool } from './database/index.js';
 
 const app = express();
 
@@ -21,6 +22,56 @@ app.use(cookieParser());
 
 app.get('/api/health', (_req, res) => {
     res.json({ success: true, status: 'ok', timestamp: new Date().toISOString() });
+});
+
+app.get('/api/diagnostics', async (_req, res) => {
+    const results: Record<string, unknown> = {};
+
+    try {
+        const client = await pool.connect();
+        results.dbConnect = 'ok';
+        client.release();
+    } catch (e: any) {
+        results.dbConnect = { error: e.message, code: e.code };
+    }
+
+    try {
+        const selectResult = await pool.query('SELECT COUNT(*) as count FROM reviews');
+        results.select = selectResult.rows[0];
+    } catch (e: any) {
+        results.select = { error: e.message, code: e.code };
+    }
+
+    try {
+        const client = await pool.connect();
+        try {
+            await client.query('BEGIN');
+            const insertResult = await client.query(
+                "INSERT INTO reviews (name, role, content, stars) VALUES ($1, $2, $3, $4) RETURNING id",
+                ['diagnostico', 'test', 'test diagnostico deploy', 5]
+            );
+            results.insert = { success: true, id: insertResult.rows[0]?.id };
+            await client.query('ROLLBACK');
+        } catch (e: any) {
+            results.insert = { error: e.message, code: e.code, detail: e.detail };
+            await client.query('ROLLBACK').catch(() => {});
+        } finally {
+            client.release();
+        }
+    } catch (e: any) {
+        results.insert = { error: e.message, code: e.code, phase: 'connect' };
+    }
+
+    try {
+        const columnResult = await pool.query(
+            "SELECT column_name, data_type FROM information_schema.columns WHERE table_name = 'reviews' ORDER BY ordinal_position"
+        );
+        results.reviewsColumns = columnResult.rows;
+    } catch (e: any) {
+        results.reviewsColumns = { error: e.message, code: e.code };
+    }
+
+    res.json({ success: true, diagnostics: results });
 });
 
 app.use('/api', indexRoutes);
