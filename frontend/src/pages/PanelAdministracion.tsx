@@ -243,13 +243,11 @@ const PanelAdministracion: React.FC = () => {
   };
 
   const handleLogout = async () => {
-    try {
-      await fetch(`${API_BASE}/admin/auth/logout`, {
-        method: 'POST',
-        credentials: 'include',
-      });
-    } catch {}
-    navigate('/LoginPanelAdministracion2026');
+    await fetch(`${API_BASE}/admin/auth/logout`, {
+      method: 'POST',
+      credentials: 'include',
+    });
+    window.location.href = '/LoginPanelAdministracion2026';
   };
 
   if (!authChecked) {
@@ -261,9 +259,8 @@ const PanelAdministracion: React.FC = () => {
       {/* Header */}
       <header className="panel-header">
         <h1 className="panel-logo">CiberDev Admin</h1>
-        <button onClick={handleLogout} className="btn-logout">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-          Cerrar Sesión
+        <button onClick={handleLogout} className="btn-logout" title="Cerrar sesión">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
         </button>
       </header>
       {/* Notificaciones */}

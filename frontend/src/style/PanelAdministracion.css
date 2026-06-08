@@ -35,14 +35,13 @@
 .btn-logout {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 20px;
-  border: 1px solid #475569;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid #334155;
   border-radius: 8px;
   background: transparent;
-  color: #cbd5e1;
-  font-size: 0.875rem;
-  font-weight: 500;
+  color: #94a3b8;
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -50,7 +49,7 @@
 .btn-logout:hover {
   background-color: #334155;
   border-color: #ef4444;
-  color: #fca5a5;
+  color: #f87171;
 }
 
 /* ===== Notificaciones ===== */
