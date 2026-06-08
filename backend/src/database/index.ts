@@ -3,7 +3,7 @@ import { config } from '../config/index.js';
 
 const poolOptions = {
     connectionString: config.database.url,
-    ssl: config.database.ssl ? { rejectUnauthorized: true } : false,
+    ssl: config.database.ssl ? { rejectUnauthorized: false } : false,
     max: config.database.poolMax,
     idleTimeoutMillis: 30000,
     connectionTimeoutMillis: 2000,
