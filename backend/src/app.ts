@@ -32,6 +32,43 @@ app.get('/api/health', (_req, res) => {
     res.json({ success: true, status: 'ok', timestamp: new Date().toISOString() });
 });
 
+app.get('/api/meta-image', async (req, res) => {
+    const url = req.query.url as string;
+    if (!url) {
+        res.status(400).json({ success: false, message: 'URL requerida' });
+        return;
+    }
+
+    try {
+        const response = await fetch(url, {
+            headers: { 'User-Agent': 'CiberDev-Bot/1.0' },
+            signal: AbortSignal.timeout(5000),
+        });
+
+        if (!response.ok) {
+            res.status(404).json({ success: false, message: 'No se pudo acceder a la URL' });
+            return;
+        }
+
+        const html = await response.text();
+        const match = html.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i)
+                   || html.match(/<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"']+)["']/i)
+                   || html.match(/<link[^>]+rel=["']icon["'][^>]+href=["']([^"']+)["']/i)
+                   || html.match(/<link[^>]+rel=["']shortcut icon["'][^>]+href=["']([^"']+)["']/i);
+
+        if (match?.[1]) {
+            const imageUrl = match[1].startsWith('http') ? match[1]
+                : match[1].startsWith('//') ? `https:${match[1]}`
+                : new URL(match[1], url).href;
+            res.json({ success: true, image: imageUrl });
+        } else {
+            res.json({ success: false, message: 'No se encontró imagen' });
+        }
+    } catch {
+        res.status(500).json({ success: false, message: 'Error al procesar la URL' });
+    }
+});
+
 app.use('/api', indexRoutes);
 
 app.use(notFoundHandler);

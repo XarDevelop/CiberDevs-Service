@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import '../style/Portafolio.css'
 
 interface PortafolioProps {
@@ -16,16 +17,29 @@ interface Props {
 }
 
 export default function PortafolioElement({ props }: Props) {
-    const getFavicon = (url: string) => {
-        try {
-            const host = new URL(url).hostname;
-            return `https://www.google.com/s2/favicons?domain=${host}&sz=128`;
-        } catch {
-            return null;
-        }
-    };
+    const [ogImage, setOgImage] = useState<string | null>(null);
 
-    const imageSrc = props.image_url || (props.project_url ? getFavicon(props.project_url) : null);
+    useEffect(() => {
+        if (props.image_url) {
+            setOgImage(props.image_url);
+            return;
+        }
+        if (!props.project_url) return;
+
+        let cancelled = false;
+        fetch(`/api/meta-image?url=${encodeURIComponent(props.project_url)}`)
+            .then(r => r.json())
+            .then(data => {
+                if (!cancelled && data.success && data.image) {
+                    setOgImage(data.image);
+                }
+            })
+            .catch(() => {});
+
+        return () => { cancelled = true; };
+    }, [props.id, props.image_url, props.project_url]);
+
+    const imageSrc = ogImage;
 
     const content = (
         <div className="portfolio-item">
