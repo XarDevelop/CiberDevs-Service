@@ -1,28 +1,38 @@
-import { AuthRepo } from '../../src/Auth/repo/auth.repo.js';
-import { describe, it, expect, jest, beforeEach, afterAll } from '@jest/globals';
+import { describe, it, expect, jest, beforeAll, beforeEach } from '@jest/globals';
+import type { AuthRepo as AuthRepoType } from '../../src/Auth/repo/auth.repo.js';
+
+const mockConfig = { passwordHash: 'test_hash' as string | undefined };
+
+jest.unstable_mockModule('../../src/config/index.js', () => ({
+    config: {
+        admin: {
+            get passwordHash() { return mockConfig.passwordHash; }
+        }
+    }
+}));
+
+let AuthRepo: typeof AuthRepoType;
+
+beforeAll(async () => {
+    const mod = await import('../../src/Auth/repo/auth.repo.js');
+    AuthRepo = mod.AuthRepo;
+});
 
 describe('AuthRepo', () => {
-    let authRepo: AuthRepo;
-    const ORIGINAL_ENV = process.env;
-
     beforeEach(() => {
-        jest.resetModules();
-        process.env = { ...ORIGINAL_ENV };
-        authRepo = new AuthRepo();
+        mockConfig.passwordHash = 'test_hash';
     });
 
-    afterAll(() => {
-        process.env = ORIGINAL_ENV;
-    });
-
-    it('should return the admin password hash from env', () => {
-        process.env.ADMIN_PASSWORD_HASH = 'test_hash';
+    it('should return the admin password hash from config', () => {
+        mockConfig.passwordHash = 'test_hash';
+        const authRepo = new AuthRepo();
         const hash = authRepo.getAdminPasswordHash();
         expect(hash).toBe('test_hash');
     });
 
-    it('should return undefined if the env variable is not set', () => {
-        delete process.env.ADMIN_PASSWORD_HASH;
+    it('should return undefined if hash is not set', () => {
+        mockConfig.passwordHash = undefined;
+        const authRepo = new AuthRepo();
         const hash = authRepo.getAdminPasswordHash();
         expect(hash).toBeUndefined();
     });

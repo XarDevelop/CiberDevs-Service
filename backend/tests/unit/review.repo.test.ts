@@ -11,7 +11,7 @@ describe('ReviewRepository - Unit Tests', () => {
 
     it('[GET] debería ejecutar el query correcto y retornar las reseñas activas', async () => {
         const mockRows = [
-            { id: 1, author_name: 'Juan Perez', content: 'Genial', rating: 5, is_active: true }
+            { id: 1, name: 'Juan Perez', content: 'Genial', stars: 5, is_active: true }
         ];
 
         jest.spyOn(pool, 'query').mockResolvedValueOnce({ rows: mockRows } as never);
@@ -27,11 +27,10 @@ describe('ReviewRepository - Unit Tests', () => {
 
     it('[POST] debería insertar una reseña y devolver la fila introducida', async () => {
         const newReviewData = {
-            author_name: 'Ana García',
-            author_role: 'Freelancer',
-            avatar_url: 'https://ejemplo.com/avatar.jpg',
+            name: 'Ana García',
+            role: 'Freelancer',
             content: 'Muy recomendado',
-            rating: 4
+            stars: 4
         };
         const mockRow = { id: 2, ...newReviewData, is_active: true, created_at: new Date() };
 
@@ -41,7 +40,7 @@ describe('ReviewRepository - Unit Tests', () => {
 
         expect(pool.query).toHaveBeenCalledWith(
             expect.stringContaining('INSERT INTO reviews'), 
-            [newReviewData.author_name, newReviewData.author_role, newReviewData.avatar_url, newReviewData.content, newReviewData.rating]
+            [newReviewData.name, newReviewData.role, newReviewData.content, newReviewData.stars]
         );
         expect(result).toEqual(mockRow);
     });

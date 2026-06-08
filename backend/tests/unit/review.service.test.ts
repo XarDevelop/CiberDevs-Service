@@ -19,10 +19,10 @@ describe('ReviewService - Unit Tests', () => {
         const mockReviews: Review[] = [
             {
                 id: 1,
-                author_name: 'María Rodríguez',
-                author_role: 'Dueña de Boutique',
+                name: 'María Rodríguez',
+                role: 'Dueña de Boutique',
                 content: 'Excelente servicio.',
-                rating: 5,
+                stars: 5,
                 is_active: true,
                 created_at: new Date(),
             },
@@ -38,10 +38,10 @@ describe('ReviewService - Unit Tests', () => {
 
     it('debería llamar al repositorio para crear una reseña y devolver la data creada', async () => {
         const payload = {
-            author_name: 'Ana García',
-            author_role: 'Freelancer',
+            name: 'Ana García',
+            role: 'Freelancer',
             content: 'Excelente trabajo.',
-            rating: 4
+            stars: 4
         };
         const mockCreatedReview: Review = { 
             id: 2, 

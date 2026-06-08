@@ -12,9 +12,11 @@ describe('OrderHandler - Unit Tests', () => {
     let nextFunction: jest.Mock;
     const mockOrder: Order = {
         id: 1,
-        identifier: 'Empresa Test',
-        contact: 'test@mail.com',
-        description: 'Quiero una pagina web',
+        name: 'Empresa Test',
+        telefono: 'test@mail.com',
+        coment: 'Quiero una pagina web',
+        tipo_pedido: 'web',
+        tipo_pago: 'transferencia',
         status: 'en espera',
         stage: 'pendiente',
         is_deleted: false,
@@ -93,7 +95,7 @@ describe('OrderHandler - Unit Tests', () => {
     describe('createOrder', () => {
         it('debería responder con 201 y la orden creada', async () => {
             mockOrderService.createOrder.mockResolvedValue(mockOrder);
-            mockRequest = { body: { identifier: 'Empresa Test', contact: 'test@mail.com', description: 'Quiero una pagina web' } };
+            mockRequest = { body: { name: 'Empresa Test', telefono: 'test@mail.com', coment: 'Quiero una pagina web', tipo_pedido: 'web', tipo_pago: 'transferencia' } };
 
             await orderHandler.createOrder(mockRequest as Request, mockResponse as Response, nextFunction as NextFunction);
 

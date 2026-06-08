@@ -8,23 +8,23 @@ import { errorHandler } from '../../src/middleware/errorHandler.js';
 // Configuramos una app Express exclusiva para testear las rutas aisladas
 const app = express();
 app.use(express.json());
-app.use('/api/v1/reviews', reviewRouter);
+app.use('/api/reviews', reviewRouter);
 // Añadimos el error handler para simular el ciclo de vida completo
 app.use(errorHandler as express.ErrorRequestHandler);
 
-describe('GET /api/v1/reviews - Integration API', () => {
+describe('GET /api/reviews - Integration API', () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
 
     it('debe responder 200 y devolver la lista de reseñas a través de HTTP', async () => {
-        const mockRows = [{ id: 1, author_name: 'Ana', content: 'Increíble', rating: 5, is_active: true }];
+        const mockRows = [{ id: 1, name: 'Ana', content: 'Increíble', stars: 5, is_active: true }];
         
         // Mockeamos la base de datos igual que en el repo
         jest.spyOn(pool, 'query').mockResolvedValueOnce({ rows: mockRows } as never);
 
         // Simulamos la llamada HTTP real usando supertest
-        const response = await request(app).get('/api/v1/reviews');
+        const response = await request(app).get('/api/reviews');
 
         expect(response.status).toBe(200);
         expect(response.body).toEqual({
@@ -37,27 +37,27 @@ describe('GET /api/v1/reviews - Integration API', () => {
         // Simulamos un crash en la BD
         jest.spyOn(pool, 'query').mockRejectedValueOnce(new Error('DB Connection Refused'));
 
-        const response = await request(app).get('/api/v1/reviews');
+        const response = await request(app).get('/api/reviews');
 
         expect(response.status).toBe(500);
         expect(response.body).toEqual({
             success: false,
-            message: 'Error interno del servidor'
+            message: 'DB Connection Refused'
         });
     });
 });
 
-describe('POST /api/v1/reviews - Integration API', () => {
+describe('POST /api/reviews - Integration API', () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
 
     it('debe crear una reseña exitosamente si los datos son válidos', async () => {
         const newReviewPayload = {
-            author_name: 'Ana',
-            author_role: 'Founder',
+            name: 'Ana',
+            role: 'Founder',
             content: 'Gran mejora para mi web',
-            rating: 5
+            stars: 5
         };
 
         const mockResponse = { id: 1, ...newReviewPayload, is_active: true };
@@ -65,7 +65,7 @@ describe('POST /api/v1/reviews - Integration API', () => {
         jest.spyOn(pool, 'query').mockResolvedValueOnce({ rows: [mockResponse] } as never);
 
         const response = await request(app)
-            .post('/api/v1/reviews')
+            .post('/api/reviews')
             .send(newReviewPayload);
 
         expect(response.status).toBe(201);
@@ -74,17 +74,17 @@ describe('POST /api/v1/reviews - Integration API', () => {
 
     it('debe devolver error 400 de validación si el rating es mayor a 5 o faltan datos', async () => {
         const invalidPayload = {
-            author_name: 'A', // Muy corto
-            author_role: 'Founder',
+            name: 'A', // Muy corto
+            role: 'Founder',
             content: 'Gran mejora para mi web',
-            rating: 10 // Inválido, max es 5
+            stars: 10 // Inválido, max es 5
             // Falta content? no, pero testemos el rating
         };
 
         const dbSpy = jest.spyOn(pool, 'query');
 
         const response = await request(app)
-            .post('/api/v1/reviews')
+            .post('/api/reviews')
             .send(invalidPayload);
 
         expect(response.status).toBe(400);

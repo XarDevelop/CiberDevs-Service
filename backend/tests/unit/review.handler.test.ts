@@ -29,7 +29,7 @@ describe('ReviewHandler - Unit Tests', () => {
 
     it('debería responder con status 200 y la data si el servicio responde correctamente', async () => {
         const mockReviews: Review[] = [
-            { id: 1, author_name: 'Ana', author_role: 'CEO', content: 'Gran trabajo!', rating: 5, is_active: true, created_at: new Date() }
+            { id: 1, name: 'Ana', role: 'CEO', content: 'Gran trabajo!', stars: 5, is_active: true, created_at: new Date() }
         ];
         mockReviewService.getReviews.mockResolvedValue(mockReviews);
 
@@ -57,10 +57,10 @@ describe('ReviewHandler - Unit Tests', () => {
 
     it('debería responder con status 201 y la data cuando createReview es exitoso', async () => {
         const payload = {
-            author_name: 'Marcos',
-            author_role: 'Designer',
+            name: 'Marcos',
+            role: 'Designer',
             content: 'Lo recomiendo.',
-            rating: 5
+            stars: 5
         };
         mockRequest.body = payload;
 
@@ -86,7 +86,7 @@ describe('ReviewHandler - Unit Tests', () => {
     });
 
     it('[POST] debería llamar a next(error) si el servicio lanza una excepción al crear', async () => {
-        mockRequest.body = { author_name: 'Fallo' };
+        mockRequest.body = { name: 'Fallo' };
         const mockError = new Error('Error guardando en BD');
         
         mockReviewService.createReview.mockRejectedValue(mockError);

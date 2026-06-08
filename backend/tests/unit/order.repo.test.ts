@@ -4,7 +4,7 @@ import { OrderRepository } from '../../src/order/repo/order.repo.js';
 
 describe('OrderRepository - Unit Tests', () => {
     const orderRepo = new OrderRepository();
-    const mockRow = { id: 1, identifier: 'Empresa Test', contact: 'test@mail.com', description: 'Quiero una pagina web', status: 'en espera', stage: 'pendiente', is_deleted: false, created_at: new Date() };
+    const mockRow = { id: 1, name: 'Empresa Test', telefono: 'test@mail.com', coment: 'Quiero una pagina web', tipo_pedido: 'web', tipo_pago: 'transferencia', status: 'en espera', stage: 'pendiente', is_deleted: false, created_at: new Date() };
 
     afterEach(() => {
         jest.restoreAllMocks();
@@ -45,14 +45,14 @@ describe('OrderRepository - Unit Tests', () => {
 
     describe('createOrder', () => {
         it('debería insertar y retornar la orden creada', async () => {
-            const data = { identifier: 'Empresa Test', contact: 'test@mail.com', description: 'Quiero una pagina web' };
+            const data = { name: 'Empresa Test', telefono: 'test@mail.com', coment: 'Quiero una pagina web', tipo_pedido: 'web', tipo_pago: 'transferencia' };
             jest.spyOn(pool, 'query').mockResolvedValueOnce({ rows: [mockRow] } as never);
 
             const result = await orderRepo.createOrder(data);
 
             expect(pool.query).toHaveBeenCalledWith(
                 expect.stringContaining('INSERT INTO orders'),
-                [data.identifier, data.contact, data.description]
+                [data.name, data.telefono, data.coment, data.tipo_pedido, data.tipo_pago]
             );
             expect(result).toEqual(mockRow);
         });

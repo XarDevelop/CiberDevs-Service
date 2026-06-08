@@ -9,9 +9,11 @@ describe('OrderService - Unit Tests', () => {
     let mockOrderRepo: jest.Mocked<IOrderRepository>;
     const mockOrder: Order = {
         id: 1,
-        identifier: 'Empresa Test',
-        contact: 'test@mail.com',
-        description: 'Quiero una pagina web',
+        name: 'Empresa Test',
+        telefono: 'test@mail.com',
+        coment: 'Quiero una pagina web',
+        tipo_pedido: 'web',
+        tipo_pago: 'transferencia',
         status: 'en espera',
         stage: 'pendiente',
         is_deleted: false,
@@ -67,7 +69,7 @@ describe('OrderService - Unit Tests', () => {
 
     describe('createOrder', () => {
         it('debería crear y retornar la orden', async () => {
-            const data = { identifier: 'Empresa Test', contact: 'test@mail.com', description: 'Quiero una pagina web' };
+            const data = { name: 'Empresa Test', telefono: 'test@mail.com', coment: 'Quiero una pagina web', tipo_pedido: 'web', tipo_pago: 'transferencia' };
             mockOrderRepo.createOrder.mockResolvedValue(mockOrder);
 
             const result = await orderService.createOrder(data);
@@ -79,7 +81,7 @@ describe('OrderService - Unit Tests', () => {
         it('debería lanzar AppError si el repo retorna null', async () => {
             mockOrderRepo.createOrder.mockResolvedValue(null as unknown as Order);
 
-            await expect(orderService.createOrder({ identifier: 'Test', contact: 'test@mail.com', description: 'Test descripcion larga' })).rejects.toThrow(AppError);
+            await expect(orderService.createOrder({ name: 'Test', telefono: 'test@mail.com', coment: 'Test descripcion larga', tipo_pedido: 'web', tipo_pago: 'transferencia' })).rejects.toThrow(AppError);
         });
     });
 
