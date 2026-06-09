@@ -11,6 +11,7 @@ import Paper from '@mui/material/Paper';
 import SendIcon from '@mui/icons-material/Send';
 import CloseIcon from '@mui/icons-material/Close';
 import AddIcon from '@mui/icons-material/Add';
+import CircularProgress from '@mui/material/CircularProgress';
 
 interface InfoTestimonio {
     id: number,
@@ -42,6 +43,7 @@ export default function Testimonio() {
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string>('');
     const [submitError, setSubmitError] = useState<string>('');
+    const [submitting, setSubmitting] = useState<boolean>(false);
 
     const [nombre, setNombre] = useState<string>('');
     const [comentario, setComentario] = useState<string>('');
@@ -80,6 +82,9 @@ export default function Testimonio() {
             return;
         }
 
+        setSubmitting(true);
+        setSubmitError('');
+
         const newTestimonio: Testimonio = {
             name: nombre,
             content: comentario,
@@ -90,7 +95,6 @@ export default function Testimonio() {
         try {
             await axios.post('/api/reviews', newTestimonio);
             
-            setSubmitError('');
             setNombre('');
             setComentario('');
             setRol('');
@@ -100,6 +104,8 @@ export default function Testimonio() {
             TraerTestimonios();
         } catch {
             setSubmitError('Error al enviar el testimonio. Intenta de nuevo.');
+        } finally {
+            setSubmitting(false);
         }
     }
 
@@ -248,10 +254,11 @@ export default function Testimonio() {
                                 variant="contained"
                                 size="large"
                                 fullWidth
-                                startIcon={<SendIcon />}
+                                disabled={submitting}
+                                startIcon={submitting ? <CircularProgress size={20} color="inherit" /> : <SendIcon />}
                                 sx={{ mt: 2, py: 1.5 }}
                             >
-                                Enviar Testimonio
+                                {submitting ? 'Enviando...' : 'Enviar Testimonio'}
                             </Button>
                         </Box>
                     </Paper>
